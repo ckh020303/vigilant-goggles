@@ -1,0 +1,6 @@
+../app/Bsp/Bsp.c:3:6:LED_G_WritePin	1
+../app/Bsp/Bsp.c:8:6:LED_G_TogglePin	1
+../app/Bsp/Bsp.c:13:6:HAL_TIM_PeriodElapsedCallback	2
+../app/Bsp/Bsp.c:21:6:TIM_SetTime	2
+../app/Bsp/Bsp.c:35:6:TIM_Start	1
+../app/Bsp/Bsp.c:42:6:TIM_Stop	1

@@ -1,0 +1,2 @@
+../app/InternalFlashUpdater/InternalFlashUpdater.c:36:12:InternalFlashFilter	4200	static
+../app/InternalFlashUpdater/InternalFlashUpdater.c:66:5:InternalFlashUpdate	6280	static

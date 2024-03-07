@@ -1,0 +1,6 @@
+../app/Bsp/Bsp.c:3:6:LED_G_WritePin	16	static
+../app/Bsp/Bsp.c:8:6:LED_G_TogglePin	8	static
+../app/Bsp/Bsp.c:13:6:HAL_TIM_PeriodElapsedCallback	16	static
+../app/Bsp/Bsp.c:21:6:TIM_SetTime	16	static
+../app/Bsp/Bsp.c:35:6:TIM_Start	8	static
+../app/Bsp/Bsp.c:42:6:TIM_Stop	8	static

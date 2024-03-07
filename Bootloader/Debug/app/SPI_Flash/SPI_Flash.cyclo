@@ -1,0 +1,16 @@
+../app/SPI_Flash/SPI_Flash.c:25:6:SPI_FLASH_EnableSelect	1
+../app/SPI_Flash/SPI_Flash.c:33:6:SPI_FLASH_DisableSelect	1
+../app/SPI_Flash/SPI_Flash.c:45:6:SPI_FLASH_SectorErase	1
+../app/SPI_Flash/SPI_Flash.c:73:6:SPI_FLASH_BlockErase	1
+../app/SPI_Flash/SPI_Flash.c:103:6:SPI_FLASH_ChipErase	1
+../app/SPI_Flash/SPI_Flash.c:133:6:SPI_FLASH_PageWrite	2
+../app/SPI_Flash/SPI_Flash.c:173:6:SPI_FLASH_BufferWrite	8
+../app/SPI_Flash/SPI_Flash.c:255:6:SPI_FLASH_BufferRead	2
+../app/SPI_Flash/SPI_Flash.c:289:5:SPI_FLASH_ReadID	1
+../app/SPI_Flash/SPI_Flash.c:328:6:SPI_FLASH_StartReadSequence	1
+../app/SPI_Flash/SPI_Flash.c:354:4:SPI_FLASH_ReadByte	1
+../app/SPI_Flash/SPI_Flash.c:367:4:SPI_FLASH_SendByte	3
+../app/SPI_Flash/SPI_Flash.c:396:5:SPI_FLASH_SendHalfWord	1
+../app/SPI_Flash/SPI_Flash.c:408:6:SPI_FLASH_WriteEnable	1
+../app/SPI_Flash/SPI_Flash.c:429:6:SPI_FLASH_WaitForWriteEnd	2
+../app/SPI_Flash/SPI_Flash.c:454:6:SPI_FLASH_WriteByte	5
