@@ -1,0 +1,4 @@
+STM32CubeIDE
+
+Version: 1.10.1
+Build: 12716_20220707_0928 (UTC)
