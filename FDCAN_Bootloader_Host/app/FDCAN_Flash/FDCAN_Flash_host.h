@@ -36,7 +36,7 @@ extern uint8_t rx_flag;
 
 void FDCAN_Config(void);
 void FDCAN_Enable(void);
-void FDCAN_TxConfig(FDCAN_TxHeaderTypeDef *header);
+void FDCAN_TxConfig(void);
 
 void FDCAN_SendByte(uint8_t byte);
 void FDCAN_SendBytes(uint8_t *Buffer, uint32_t BufferSize);
@@ -46,6 +46,8 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 
 void FDCAN_GetCommand(void);
 void FDCAN_GetID(void);
+void FDCAN_ReadMemory(void);
+void FDCAN_WriteMemory(void);
 
 void FDCAN_FLASH_SectorErase(uint32_t SectorAddr);
 void FDCAN_FLASH_BufferRead(uint8_t* pBuffer, uint32_t ReadAddr, uint16_t NumByteToRead);

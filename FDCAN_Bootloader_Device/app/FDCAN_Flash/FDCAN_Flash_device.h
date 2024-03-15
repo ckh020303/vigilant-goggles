@@ -52,6 +52,8 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 void FDCAN_GetCommand_d(void);
 void FDCAN_GetID_d(void);
 void FDCAN_ReadMemory_d(void);
+void FDCAN_WriteMemory_d(void);
+void FDCAN_EraseMemory_d(void);
 
 uint8_t FDCAN_GetAddress(uint32_t *Address);
 

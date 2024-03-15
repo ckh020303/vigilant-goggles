@@ -138,8 +138,10 @@ int main(void)
 				case 0x21:
 					break;
 				case 0x31:
+					FDCAN_WriteMemory_d();
 					break;
 				case 0x44:
+					FDCAN_EraseMemory_d();
 					break;
 				case 0x63:
 					break;

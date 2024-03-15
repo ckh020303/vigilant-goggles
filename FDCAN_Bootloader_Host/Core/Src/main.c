@@ -111,6 +111,14 @@ int main(void)
   FDCAN_GetCommand();
   FDCAN_GetID();
   FDCAN_ReadMemory();
+  FDCAN_WriteMemory();
+//  HAL_Delay(10);
+  FDCAN_ReadMemory();
+  FDCAN_EraseMemory();
+//  HAL_Delay(100);
+  FDCAN_ReadMemory();
+//  FDCAN_WriteMemory();
+//  FDCAN_ReadMemory();
   /* USER CODE END 2 */
 
   /* Infinite loop */

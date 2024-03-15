@@ -66,17 +66,9 @@ void FDCAN_Enable(void)
 	validCount = 0;
 }
 
-void FDCAN_TxConfig(FDCAN_TxHeaderTypeDef *header)
+void FDCAN_TxConfig(void)
 {
-	header->Identifier = 0x111;
-	header->IdType = FDCAN_STANDARD_ID;
-	header->TxFrameType = FDCAN_DATA_FRAME;
-	header->DataLength = FDCAN_DLC_BYTES_64;
-	header->ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-	header->BitRateSwitch = FDCAN_BRS_ON;
-	header->FDFormat = FDCAN_FD_CAN;
-	header->TxEventFifoControl  = FDCAN_NO_TX_EVENTS;
-	header->MessageMarker       = 0;
+	TxHeader.Identifier = 0x111;
 }
 
 void FDCAN_SendByte(uint8_t byte)
@@ -97,19 +89,19 @@ void FDCAN_SendByte(uint8_t byte)
 
 void FDCAN_SendBytes(uint8_t *Buffer, uint32_t BufferSize)
 {
-  TxHeader.DataLength = BufferSize;
+	TxHeader.DataLength = BufferSize;
 
-  while (HAL_FDCAN_GetTxFifoFreeLevel(&hfdcan1) == 0);
+	while (HAL_FDCAN_GetTxFifoFreeLevel(&hfdcan1) == 0);
 
-  HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, Buffer);
+	HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, Buffer);
 
-  /* Wait that the data is completely sent (sent FIFO empty) */
-  while (((&hfdcan1)->Instance->IR & FDCAN_IR_TFE) != FDCAN_IR_TFE);
+	/* Wait that the data is completely sent (sent FIFO empty) */
+	while (((&hfdcan1)->Instance->IR & FDCAN_IR_TFE) != FDCAN_IR_TFE);
 
-  /* Clear the complete flag */
-  (&hfdcan1)->Instance->IR &= FDCAN_IR_TFE;
+	/* Clear the complete flag */
+	(&hfdcan1)->Instance->IR &= FDCAN_IR_TFE;
 
-  HAL_Delay(1);
+	HAL_Delay(1);
 }
 
 uint8_t FDCAN_ReadByte(void)
@@ -256,14 +248,14 @@ void FDCAN_GetID(void)
 void FDCAN_ReadMemory(void)
 {
 	uint8_t data[64];
-	uint8_t txdata[5] = {0x08,0x00,0x00,0x00,0xFF};
+	uint8_t txdata[5] = {0x08,0x01,0x00,0x00,0xFF};
 	TxHeader.Identifier = READ;
 
 	FDCAN_SendBytes(txdata,FDCAN_DLC_BYTES_5);
 	HAL_Delay(10);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 	{
-		printf("MemoryData:\n");
+		printf("ReadMemoryData:\n");
 		for(int i=0;i<4;i++)
 		{
 			FDCAN_ReadBytes(data,FDCAN_DLC_BYTES_64);
@@ -289,6 +281,77 @@ void FDCAN_ReadMemory(void)
 	}
 }
 
+void FDCAN_WriteMemory(void)
+{
+	uint32_t address;
+	uint8_t data[64]={0};
+	uint8_t txdata[5] = {0x08,0x01,0x00,0x00,0xFF};
+	TxHeader.Identifier = WRITE;
 
+//	address = 0x08000000;
+
+	FDCAN_SendBytes(txdata,FDCAN_DLC_BYTES_5);
+	FDCAN_TxConfig();
+	HAL_Delay(10);
+	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
+	{
+		for (int i=0;i<4;i++)
+		{
+//			printf("WriteMemoryData:\n");
+//			for (int count = 0 ; count > 64U; count++)
+//			{
+//				data[count] = FLASH_Read(address++);
+//				printf("%x ",data[count]);
+//			}
+//			printf("\n");
+			FDCAN_SendBytes(data,FDCAN_DLC_BYTES_64);
+		}
+
+		HAL_Delay(10);
+		if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
+		{
+			printf("WriteMemory Success!\n");
+		}
+	}
+	else if ((FDCAN_ReadByte() & NACK_BYTE) == NACK_BYTE)
+	{
+		printf("WriteMemory fail!\n");
+	}
+	else
+	{
+		printf("error\n");
+	}
+}
+
+void FDCAN_EraseMemory(void)
+{
+	uint8_t data[64]={0};
+	uint8_t txdata[2] = {0x00,0x01};
+	data[0] = 0x00;
+	data[1] = 0x20;
+	TxHeader.Identifier = ERASE;
+
+	FDCAN_SendBytes(txdata,FDCAN_DLC_BYTES_2);
+	FDCAN_TxConfig();
+	HAL_Delay(10);
+	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
+	{
+		FDCAN_SendBytes(data,FDCAN_DLC_BYTES_64);
+
+		HAL_Delay(100);
+		if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
+		{
+			printf("EraseMemory Success!\n");
+		}
+	}
+	else if ((FDCAN_ReadByte() & NACK_BYTE) == NACK_BYTE)
+	{
+		printf("WriteMemory fail!\n");
+	}
+	else
+	{
+		printf("error\n");
+	}
+}
 
 

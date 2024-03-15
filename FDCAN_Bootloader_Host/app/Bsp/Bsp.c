@@ -51,3 +51,9 @@ uint32_t FLASH_GetReadOutProtectionLevel(void)
 
 	return flash_ob.RDPLevel;
 }
+
+uint8_t FLASH_Read(uint32_t Address)
+{
+	return (*(uint8_t *)(Address));
+}
+

@@ -16,5 +16,7 @@ FlagStatus GetReadOutProtectionStatus(void);
 uint32_t FLASH_GetReadOutProtectionLevel(void);
 
 uint8_t FLASH_Read(uint32_t Address);
+void FLASH_Write(uint32_t Address, uint8_t *Data, uint32_t DataLength);
+void FLASH_Erase(uint8_t *p_Data, uint32_t DataLength);
 
 #endif

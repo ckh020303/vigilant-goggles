@@ -14,5 +14,6 @@ void enterNormalMode(void);
 
 FlagStatus GetReadOutProtectionStatus(void);
 uint32_t FLASH_GetReadOutProtectionLevel(void);
+uint8_t FLASH_Read(uint32_t Address);
 
 #endif

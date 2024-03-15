@@ -3,9 +3,15 @@
 
 uint8_t isCommandID;
 uint8_t isSelectID;
-uint8_t TxData[64];
 FDCAN_TxHeaderTypeDef TxHeader;
 FDCanRxHeader header;
+FDCanRxHeader _Buffer[400];
+int size = 400;
+int validCount;
+int head,tail;
+
+#define PAGE_SIZE   FLASH_PAGE_SIZE          /* 2KB Page */
+#define	MAX_SIZE	0x08000000 + 0x020000 - 0x0800F000
 
 void FDCAN_Config(void)
 {
@@ -76,17 +82,6 @@ void FDCAN_TxConfig(FDCAN_TxHeaderTypeDef *header)
 	header->MessageMarker       = 0;
 }
 
-uint8_t FDCAN_ReadByte(void)
-{
-	/* check if FIFO 0 receive at least one message */
-	while (HAL_FDCAN_GetRxFifoFillLevel(&hfdcan1, FDCAN_RX_FIFO0) < 1);
-
-	/* Retrieve Rx messages from RX FIFO0 */
-	HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &(header.RxHeader), header.data);
-
-	return *(header.data);
-}
-
 void FDCAN_SendByte(uint8_t byte)
 {
 	TxHeader.DataLength = FDCAN_DLC_BYTES_1;
@@ -121,6 +116,38 @@ void FDCAN_SendBytes(uint8_t *Buffer, uint32_t BufferSize)
 	HAL_Delay(1);
 }
 
+uint8_t FDCAN_ReadByte(void)
+{
+	FDCanRxHeader header;
+	int err;
+
+	err = read(&header);
+	if(err){
+		HAL_Delay(1);
+		return header.data[0];
+	}
+	else
+	{
+		printf("Buffer is Empty\n");
+	}
+}
+
+void FDCAN_ReadBytes(uint8_t *Buffer, uint32_t BufferSize)
+{
+	FDCanRxHeader header;
+	int err;
+
+	err = read(&header);
+	if(err){
+		memcpy(Buffer,header.data,sizeof(header.data));
+		HAL_Delay(1);
+	}
+	else
+	{
+		printf("Buffer is Empty\n");
+	}
+}
+
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)			//接收中断回调函数重写
 {
 	if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
@@ -130,11 +157,43 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 		{
 			isSelectID = 1;
 		}
-		else
-		{
-			HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &(header.RxHeader), header.data);
-		}
+
+		HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &(header.RxHeader), header.data);
+		write(&header);
 	}
+}
+
+int getNextPos(int cur)
+{
+	return (cur+1) == size ? 0 : cur+1;
+}
+
+int write(FDCanRxHeader *content)
+{
+	int ret = 1;
+	if (validCount < size) {
+		_Buffer[tail] = *content;
+		tail = getNextPos(tail);
+		validCount++;
+	} else {
+		/* Buffer is FULL */
+		ret = 0;
+	}
+	return ret;
+}
+
+int read(FDCanRxHeader* buf)
+{
+	int ret = 1;
+	if (validCount > 0) {
+		*buf = _Buffer[head];
+		head = getNextPos(head);
+		validCount--;
+	} else {
+		/* Buffer is Empty */
+		ret = 0;
+	}
+	return ret;
 }
 
 void FDCAN_GetCommand_d(void)
@@ -171,6 +230,7 @@ void FDCAN_GetCommand_d(void)
 
 void FDCAN_GetID_d(void)
 {
+	uint8_t TxData[64];
 	FDCAN_SendByte(ACK_BYTE);
 
 	TxData[0] = DEVICE_ID_MSB;
@@ -189,6 +249,7 @@ void FDCAN_ReadMemory_d(void)
 	uint32_t count;
 	uint32_t single;
 	uint8_t  data_length;
+	uint8_t TxData[64];
 
 	/* Check memory protection then send adequate response */
 	if (GetReadOutProtectionStatus() != RESET)
@@ -242,6 +303,118 @@ void FDCAN_ReadMemory_d(void)
 				}
 				FDCAN_SendBytes(TxData, FDCAN_DLC_BYTES_64);
 			}
+			FDCAN_SendByte(ACK_BYTE);
+		}
+	}
+}
+
+void FDCAN_WriteMemory_d(void)
+{
+	uint32_t address;
+	uint32_t CodeSize;
+	uint32_t count;
+	uint32_t single;
+	uint32_t mem_area;
+	uint8_t data_length;
+	uint8_t data[256];
+
+	if (GetReadOutProtectionStatus() != RESET)
+	{
+		FDCAN_SendByte(NACK_BYTE);
+	}
+	else
+	{
+		if (FDCAN_GetAddress(&address) == NACK_BYTE)
+		{
+			FDCAN_SendByte(NACK_BYTE);
+		}
+		else
+		{
+			FDCAN_SendByte(ACK_BYTE);
+
+			/* Get the number of bytes to be written to memory (Max: data + 1 = 256) */
+			CodeSize = (uint32_t)(header.data[4]) + 1U;
+
+			count = CodeSize / 64U;
+			single = (uint32_t)(CodeSize % 64U);
+
+			data_length = 0;
+
+			HAL_Delay(15);
+			if (count != 0U)
+			{
+				while (data_length != count)
+				{
+					FDCAN_ReadBytes(&data[data_length * 64U], FDCAN_DLC_BYTES_64);
+					data_length++;
+				}
+			}
+
+			if (single != 0U)
+			{
+				FDCAN_ReadBytes(&data[(CodeSize - single)], FDCAN_DLC_BYTES_64);
+			}
+
+			FLASH_Write(address, (uint8_t *)data, CodeSize);
+
+			FDCAN_SendByte(ACK_BYTE);
+		}
+	}
+}
+
+void FDCAN_EraseMemory_d(void)
+{
+	uint16_t data_a;
+	uint16_t counter;
+	uint16_t i;
+	uint8_t tempdata;
+	uint8_t status = ACK_BYTE;
+	ErrorStatus error_value;
+	uint8_t data[80];
+
+	if (GetReadOutProtectionStatus() != RESET)
+	{
+		FDCAN_SendByte(NACK_BYTE);
+	}
+	else
+	{
+		FDCAN_SendByte(ACK_BYTE);
+
+		/* Read number of pages to be erased:
+		 * RxData[0] contains the MSB byte
+		 * RxData[1] contains the LSB byte
+		 */
+		data_a = (uint16_t)(header.data[0]) << 8;
+		data_a = data_a | (header.data[1]);
+
+		/* Rewrite the data in right order in the RxData buffer
+		 * RxData[0] = LSB
+		 * RxData[1] = MSB
+		 */
+		(header.data[0]) = (uint8_t)(data_a & 0x00FFU);
+		(header.data[1]) = (uint8_t)((data_a & 0xFF00U) >> 8);
+
+		data[0] = (header.data[0]);
+		data[1] = (header.data[1]);
+
+		if ((data_a & 0xFFF0U) != 0xFFF0U)
+		{
+			HAL_Delay(10);
+			FDCAN_ReadBytes(&data[2], 64U);
+			i = 2;
+
+			for (counter = data_a; counter != (uint16_t)0; counter--)
+			{
+				/* Receive the MSB byte */
+				tempdata = data[i];
+				i++;
+				data[i - (uint16_t)1] = data[i];
+				data[i] = tempdata;
+				i++;
+			}
+
+			FLASH_Erase(data,64);
+
 			FDCAN_SendByte(ACK_BYTE);
 		}
 	}
