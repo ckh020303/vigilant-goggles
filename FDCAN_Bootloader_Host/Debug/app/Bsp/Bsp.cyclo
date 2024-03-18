@@ -5,4 +5,3 @@
 ../app/Bsp/Bsp.c:23:6:enterNormalMode	1
 ../app/Bsp/Bsp.c:29:12:GetReadOutProtectionStatus	2
 ../app/Bsp/Bsp.c:45:10:FLASH_GetReadOutProtectionLevel	1
-../app/Bsp/Bsp.c:55:9:FLASH_Read	1

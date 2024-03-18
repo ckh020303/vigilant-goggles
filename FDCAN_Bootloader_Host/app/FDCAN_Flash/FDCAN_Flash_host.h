@@ -47,7 +47,9 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 void FDCAN_GetCommand(void);
 void FDCAN_GetID(void);
 void FDCAN_ReadMemory(void);
-void FDCAN_WriteMemory(void);
+void FDCAN_WriteMemory(uint8_t *address, uint8_t *data);
+void FDCAN_EraseMemory(uint8_t *txdata, uint8_t *data);
+void FDCAN_Go(void);
 
 void FDCAN_FLASH_SectorErase(uint32_t SectorAddr);
 void FDCAN_FLASH_BufferRead(uint8_t* pBuffer, uint32_t ReadAddr, uint16_t NumByteToRead);

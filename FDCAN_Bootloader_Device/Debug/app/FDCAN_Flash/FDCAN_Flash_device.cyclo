@@ -14,4 +14,5 @@
 ../app/FDCAN_Flash/FDCAN_Flash_device.c:244:6:FDCAN_ReadMemory_d	8
 ../app/FDCAN_Flash/FDCAN_Flash_device.c:311:6:FDCAN_WriteMemory_d	6
 ../app/FDCAN_Flash/FDCAN_Flash_device.c:365:6:FDCAN_EraseMemory_d	4
-../app/FDCAN_Flash/FDCAN_Flash_device.c:423:9:FDCAN_GetAddress	3
+../app/FDCAN_Flash/FDCAN_Flash_device.c:423:6:FDCAN_Go_d	3
+../app/FDCAN_Flash/FDCAN_Flash_device.c:447:9:FDCAN_GetAddress	3

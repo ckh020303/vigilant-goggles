@@ -12,5 +12,6 @@
 ../app/FDCAN_Flash/FDCAN_Flash_host.c:187:6:FDCAN_GetCommand	48	static
 ../app/FDCAN_Flash/FDCAN_Flash_host.c:222:6:FDCAN_GetID	72	static
 ../app/FDCAN_Flash/FDCAN_Flash_host.c:248:6:FDCAN_ReadMemory	88	static
-../app/FDCAN_Flash/FDCAN_Flash_host.c:284:6:FDCAN_WriteMemory	88	static
-../app/FDCAN_Flash/FDCAN_Flash_host.c:326:6:FDCAN_EraseMemory	88	static
+../app/FDCAN_Flash/FDCAN_Flash_host.c:284:6:FDCAN_WriteMemory	24	static
+../app/FDCAN_Flash/FDCAN_Flash_host.c:325:6:FDCAN_EraseMemory	16	static
+../app/FDCAN_Flash/FDCAN_Flash_host.c:352:6:FDCAN_Go	16	static

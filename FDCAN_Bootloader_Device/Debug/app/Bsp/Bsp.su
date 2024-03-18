@@ -8,3 +8,4 @@
 ../app/Bsp/Bsp.c:60:9:FLASH_Read	16	static
 ../app/Bsp/Bsp.c:65:6:FLASH_Write	32	static
 ../app/Bsp/Bsp.c:83:6:FLASH_Erase	48	static
+../app/Bsp/Bsp.c:111:6:jump_to_app	32	static,ignoring_inline_asm

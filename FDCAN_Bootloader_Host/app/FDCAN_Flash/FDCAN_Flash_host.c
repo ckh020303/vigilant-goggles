@@ -281,16 +281,15 @@ void FDCAN_ReadMemory(void)
 	}
 }
 
-void FDCAN_WriteMemory(void)
+void FDCAN_WriteMemory(uint8_t *address, uint8_t *data)
 {
-	uint32_t address;
-	uint8_t data[64]={0};
-	uint8_t txdata[5] = {0x08,0x01,0x00,0x00,0xFF};
+//	uint32_t address;
+//	uint8_t txdata[5] = {0x08,0x01,0x00,0x00,0xFF};
 	TxHeader.Identifier = WRITE;
 
 //	address = 0x08000000;
 
-	FDCAN_SendBytes(txdata,FDCAN_DLC_BYTES_5);
+	FDCAN_SendBytes(address,FDCAN_DLC_BYTES_5);
 	FDCAN_TxConfig();
 	HAL_Delay(10);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
@@ -304,7 +303,7 @@ void FDCAN_WriteMemory(void)
 //				printf("%x ",data[count]);
 //			}
 //			printf("\n");
-			FDCAN_SendBytes(data,FDCAN_DLC_BYTES_64);
+			FDCAN_SendBytes((data+i*64),FDCAN_DLC_BYTES_64);
 		}
 
 		HAL_Delay(10);
@@ -323,12 +322,8 @@ void FDCAN_WriteMemory(void)
 	}
 }
 
-void FDCAN_EraseMemory(void)
+void FDCAN_EraseMemory(uint8_t *txdata, uint8_t *data)
 {
-	uint8_t data[64]={0};
-	uint8_t txdata[2] = {0x00,0x01};
-	data[0] = 0x00;
-	data[1] = 0x20;
 	TxHeader.Identifier = ERASE;
 
 	FDCAN_SendBytes(txdata,FDCAN_DLC_BYTES_2);
@@ -347,6 +342,31 @@ void FDCAN_EraseMemory(void)
 	else if ((FDCAN_ReadByte() & NACK_BYTE) == NACK_BYTE)
 	{
 		printf("WriteMemory fail!\n");
+	}
+	else
+	{
+		printf("error\n");
+	}
+}
+
+void FDCAN_Go(void)
+{
+	uint8_t txdata[4] = {0x08,0x01,0x00,0x00};
+	TxHeader.Identifier = GO;
+
+	FDCAN_SendBytes(txdata,FDCAN_DLC_BYTES_4);
+	HAL_Delay(10);
+	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
+	{
+		HAL_Delay(10);
+		if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
+		{
+			printf("Go Success!\n");
+		}
+	}
+	else if ((FDCAN_ReadByte() & NACK_BYTE) == NACK_BYTE)
+	{
+		printf("Go fail!\n");
 	}
 	else
 	{

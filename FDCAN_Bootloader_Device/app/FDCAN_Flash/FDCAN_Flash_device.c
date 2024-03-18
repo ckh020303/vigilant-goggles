@@ -420,6 +420,30 @@ void FDCAN_EraseMemory_d(void)
 	}
 }
 
+void FDCAN_Go_d(void)
+{
+	uint32_t address;
+
+	if (GetReadOutProtectionStatus() != RESET)
+	{
+		FDCAN_SendByte(NACK_BYTE);
+	}
+	else
+	{
+		FDCAN_SendByte(ACK_BYTE);
+
+		if (FDCAN_GetAddress(&address) == NACK_BYTE)
+		{
+			FDCAN_SendByte(NACK_BYTE);
+		}
+	    else
+	    {
+			FDCAN_SendByte(ACK_BYTE);
+			jump_to_app(address);
+	    }
+	}
+}
+
 uint8_t FDCAN_GetAddress(uint32_t *Address)
 {
 	uint8_t status;

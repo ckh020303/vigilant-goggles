@@ -98,7 +98,8 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  uint32_t address;
+  address = 0x08010000;
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -108,6 +109,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   printf("device\n");
   FDCAN_Enable();
+//  jump_to_app(address);
 
   /* USER CODE END 2 */
 
@@ -127,8 +129,6 @@ int main(void)
 				case 0x00:
 					FDCAN_GetCommand_d();
 					break;
-				case 0x01:
-					break;
 				case 0x02:
 					FDCAN_GetID_d();
 					break;
@@ -136,20 +136,13 @@ int main(void)
 					FDCAN_ReadMemory_d();
 					break;
 				case 0x21:
+					FDCAN_Go_d();
 					break;
 				case 0x31:
 					FDCAN_WriteMemory_d();
 					break;
 				case 0x44:
 					FDCAN_EraseMemory_d();
-					break;
-				case 0x63:
-					break;
-				case 0x73:
-					break;
-				case 0x82:
-					break;
-				case 0x92:
 					break;
 				default:
 					break;

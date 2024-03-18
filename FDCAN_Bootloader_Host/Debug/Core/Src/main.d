@@ -31,7 +31,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h \
  ../Core/Inc/fdcan.h ../Core/Inc/main.h ../Core/Inc/usart.h \
  ../Core/Inc/gpio.h \
- D:/STM32CubeIDE/workspace_1.14.0/FDCAN_Bootloader_Host/app/FDCAN_Flash/FDCAN_Flash_host.h
+ D:/STM32CubeIDE/workspace_1.14.0/FDCAN_Bootloader_Host/app/FDCAN_Flash/FDCAN_Flash_host.h \
+ D:/STM32CubeIDE/workspace_1.14.0/FDCAN_Bootloader_Host/app/Bsp/Bsp.h
 ../Core/Inc/main.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
 ../Core/Inc/stm32g0xx_hal_conf.h:
@@ -68,3 +69,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/usart.h:
 ../Core/Inc/gpio.h:
 D:/STM32CubeIDE/workspace_1.14.0/FDCAN_Bootloader_Host/app/FDCAN_Flash/FDCAN_Flash_host.h:
+D:/STM32CubeIDE/workspace_1.14.0/FDCAN_Bootloader_Host/app/Bsp/Bsp.h:

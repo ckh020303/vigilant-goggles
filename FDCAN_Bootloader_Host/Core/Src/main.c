@@ -25,6 +25,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "FDCAN_Flash_host.h"
+#include "string.h"
+#include "Bsp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -98,7 +100,13 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  int i=0,ack;
+  int i,ack,count;
+  uint32_t address;
+  uint32_t add;
+  uint8_t data[256]={0};
+  uint8_t data_e[64]={0};
+  uint8_t txdata_w[5] = {0x08,0x01,0x00,0x00,0xFF};
+  uint8_t txdata_e[2] = {0x00};
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -108,21 +116,56 @@ int main(void)
   /* USER CODE BEGIN 2 */
   printf("host\n");
   FDCAN_Enable();
-  FDCAN_GetCommand();
-  FDCAN_GetID();
-  FDCAN_ReadMemory();
-  FDCAN_WriteMemory();
-//  HAL_Delay(10);
-  FDCAN_ReadMemory();
-  FDCAN_EraseMemory();
-//  HAL_Delay(100);
-  FDCAN_ReadMemory();
+  HAL_Delay(1000);
+//  FDCAN_GetCommand();
+//  FDCAN_GetID();
+//  FDCAN_ReadMemory();
+//  FDCAN_WriteMemory();
+////  HAL_Delay(10);
+//  FDCAN_ReadMemory();
+//  FDCAN_EraseMemory();
+////  HAL_Delay(100);
+//  FDCAN_ReadMemory();
 //  FDCAN_WriteMemory();
 //  FDCAN_ReadMemory();
   /* USER CODE END 2 */
 
   /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+	/* USER CODE BEGIN WHILE */
+    FDCAN_GetCommand();
+    FDCAN_GetID();
+
+    count=0;
+    for(i=1;i<64;i+=2)
+    {
+    	data_e[i] = 0x20+count++;
+    }
+
+    txdata_e[1] = 0x11;
+
+    FDCAN_EraseMemory(txdata_e,data_e);
+    HAL_Delay(1000);
+
+    address = 0x08010000;
+    for(int j=0;j<23;j++)
+    {
+    	count=0;
+    	memset(data, 0, sizeof(data));
+    	for(i=0;i<64;i++)
+		{
+			data[count++] = (uint8_t)(*(__IO uint32_t *)(address));
+			data[count++] = (uint8_t)(*(__IO uint32_t *)(address)>>8);
+			data[count++] = (uint8_t)(*(__IO uint32_t *)(address)>>16);
+			data[count++] = (uint8_t)(*(__IO uint32_t *)(address)>>24);
+			address+=4;
+		}
+    	FDCAN_WriteMemory(txdata_w,data);
+    	txdata_w[2]++;
+    	HAL_Delay(100);
+    }
+
+    FDCAN_Go();
+
 	while (1)
 	{
 //		if(rx_flag == 1)
