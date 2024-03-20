@@ -119,7 +119,6 @@ void jump_to_app(uint32_t APP_FLASH_ADDR)
 		printf("jump\n");
 
 		/* 去初始化 */
-		HAL_SuspendTick();
 		HAL_RCC_DeInit();
 		HAL_DeInit();
 

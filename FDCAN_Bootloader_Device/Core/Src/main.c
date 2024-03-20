@@ -83,6 +83,8 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	uint8_t id;
+	uint32_t starttime;
+	uint32_t endtime;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -110,7 +112,7 @@ int main(void)
   printf("device\n");
   FDCAN_Enable();
 //  jump_to_app(address);
-
+  starttime = HAL_GetTick();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -119,6 +121,7 @@ int main(void)
 	{
 		if((isSelectID == 1) && (isCommandID == 1))
 		{
+			starttime = HAL_GetTick();
 			printf("Select Command ID\n");
 
 			isCommandID = 0;
@@ -149,6 +152,14 @@ int main(void)
 			}
 			isSelectID = 0;
 			isCommandID = 1;
+		}
+		else
+		{
+			endtime = HAL_GetTick();
+			if(endtime - starttime > 4000)
+			{
+				jump_to_app(address);
+			}
 		}
     /* USER CODE END WHILE */
 

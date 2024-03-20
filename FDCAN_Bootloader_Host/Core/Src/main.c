@@ -164,6 +164,7 @@ int main(void)
     	HAL_Delay(100);
     }
 
+    HAL_Delay(1000);
     FDCAN_Go();
 
 	while (1)
