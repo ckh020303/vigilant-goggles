@@ -3,5 +3,5 @@
 ../app/Bsp/Bsp.c:13:6:LED_R_WritePin	1
 ../app/Bsp/Bsp.c:18:6:LED_R_TogglePin	1
 ../app/Bsp/Bsp.c:23:6:enterNormalMode	1
-../app/Bsp/Bsp.c:29:12:GetReadOutProtectionStatus	2
 ../app/Bsp/Bsp.c:45:10:FLASH_GetReadOutProtectionLevel	1
+../app/Bsp/Bsp.c:29:12:GetReadOutProtectionStatus	1

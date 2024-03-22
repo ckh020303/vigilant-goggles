@@ -420,39 +420,39 @@ HAL_StatusTypeDef HAL_FLASHEx_OBProgram(FLASH_OBProgramInitTypeDef *pOBInit)
   */
 void HAL_FLASHEx_OBGetConfig(FLASH_OBProgramInitTypeDef *pOBInit)
 {
-  pOBInit->OptionType = OPTIONBYTE_ALL;
-
-  /* Get write protection on the selected area */
-  FLASH_OB_GetWRP(pOBInit->WRPArea, &(pOBInit->WRPStartOffset), &(pOBInit->WRPEndOffset));
+//  pOBInit->OptionType = OPTIONBYTE_ALL;
+//
+//  /* Get write protection on the selected area */
+//  FLASH_OB_GetWRP(pOBInit->WRPArea, &(pOBInit->WRPStartOffset), &(pOBInit->WRPEndOffset));
 
   /* Get Read protection level */
   pOBInit->RDPLevel = FLASH_OB_GetRDP();
 
-  /* Get the user option bytes */
-  pOBInit->USERConfig = FLASH_OB_GetUser();
-  pOBInit->USERType = OB_USER_ALL;
-
-#if defined(FLASH_PCROP_SUPPORT)
-  /* Get the Proprietary code readout protection */
-  FLASH_OB_GetPCROP1A(&(pOBInit->PCROPConfig), &(pOBInit->PCROP1AStartAddr), &(pOBInit->PCROP1AEndAddr));
-  FLASH_OB_GetPCROP1B(&(pOBInit->PCROP1BStartAddr), &(pOBInit->PCROP1BEndAddr));
-  pOBInit->PCROPConfig |= (OB_PCROP_ZONE_A | OB_PCROP_ZONE_B);
-#if defined(FLASH_DBANK_SUPPORT)
-  FLASH_OB_GetPCROP2A(&(pOBInit->PCROP2AStartAddr), &(pOBInit->PCROP2AEndAddr));
-  FLASH_OB_GetPCROP2B(&(pOBInit->PCROP2BStartAddr), &(pOBInit->PCROP2BEndAddr));
-  pOBInit->PCROPConfig |= (OB_PCROP_ZONE2_A | OB_PCROP_ZONE2_B);
-#endif /* FLASH_DBANK_SUPPORT */
-#endif /* FLASH_PCROP_SUPPORT */
-
-#if defined(FLASH_SECURABLE_MEMORY_SUPPORT)
-#if defined(FLASH_DBANK_SUPPORT)
-  /* Get the Securable Memory Area protection */
-  FLASH_OB_GetSecMem(&(pOBInit->BootEntryPoint), &(pOBInit->SecSize), &(pOBInit->SecSize2));
-#else
-  /* Get the Securable Memory Area protection */
-  FLASH_OB_GetSecMem(&(pOBInit->BootEntryPoint), &(pOBInit->SecSize));
-#endif /* FLASH_DBANK_SUPPORT */
-#endif /* FLASH_SECURABLE_MEMORY_SUPPORT */
+//  /* Get the user option bytes */
+//  pOBInit->USERConfig = FLASH_OB_GetUser();
+//  pOBInit->USERType = OB_USER_ALL;
+//
+//#if defined(FLASH_PCROP_SUPPORT)
+//  /* Get the Proprietary code readout protection */
+//  FLASH_OB_GetPCROP1A(&(pOBInit->PCROPConfig), &(pOBInit->PCROP1AStartAddr), &(pOBInit->PCROP1AEndAddr));
+//  FLASH_OB_GetPCROP1B(&(pOBInit->PCROP1BStartAddr), &(pOBInit->PCROP1BEndAddr));
+//  pOBInit->PCROPConfig |= (OB_PCROP_ZONE_A | OB_PCROP_ZONE_B);
+//#if defined(FLASH_DBANK_SUPPORT)
+//  FLASH_OB_GetPCROP2A(&(pOBInit->PCROP2AStartAddr), &(pOBInit->PCROP2AEndAddr));
+//  FLASH_OB_GetPCROP2B(&(pOBInit->PCROP2BStartAddr), &(pOBInit->PCROP2BEndAddr));
+//  pOBInit->PCROPConfig |= (OB_PCROP_ZONE2_A | OB_PCROP_ZONE2_B);
+//#endif /* FLASH_DBANK_SUPPORT */
+//#endif /* FLASH_PCROP_SUPPORT */
+//
+//#if defined(FLASH_SECURABLE_MEMORY_SUPPORT)
+//#if defined(FLASH_DBANK_SUPPORT)
+//  /* Get the Securable Memory Area protection */
+//  FLASH_OB_GetSecMem(&(pOBInit->BootEntryPoint), &(pOBInit->SecSize), &(pOBInit->SecSize2));
+//#else
+//  /* Get the Securable Memory Area protection */
+//  FLASH_OB_GetSecMem(&(pOBInit->BootEntryPoint), &(pOBInit->SecSize));
+//#endif /* FLASH_DBANK_SUPPORT */
+//#endif /* FLASH_SECURABLE_MEMORY_SUPPORT */
 }
 
 #if defined(FLASH_ACR_DBG_SWEN)

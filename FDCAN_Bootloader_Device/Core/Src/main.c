@@ -101,7 +101,7 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   uint32_t address;
-  address = 0x08010000;
+  address = 0x08003000;
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */

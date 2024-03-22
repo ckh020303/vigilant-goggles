@@ -52,8 +52,8 @@ void FDCAN_Enable(void)
 		Error_Handler();
 	}
 
-	TxHeader.Identifier = 0x111;
-	TxHeader.IdType = FDCAN_STANDARD_ID;
+	TxHeader.Identifier = 0xFFF111;
+	TxHeader.IdType = FDCAN_EXTENDED_ID;
 	TxHeader.TxFrameType = FDCAN_DATA_FRAME;
 	TxHeader.DataLength = FDCAN_DLC_BYTES_64;
 	TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
@@ -68,7 +68,7 @@ void FDCAN_Enable(void)
 
 void FDCAN_TxConfig(void)
 {
-	TxHeader.Identifier = 0x111;
+	TxHeader.Identifier = 0xFFF111;
 }
 
 void FDCAN_SendByte(uint8_t byte)
@@ -190,18 +190,18 @@ void FDCAN_GetCommand(void)
 	TxHeader.Identifier = GET;
 
 	FDCAN_SendByte(0x00);
-	HAL_Delay(10);
+	HAL_Delay(2);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 	{
 		num = FDCAN_ReadByte();
 		version = FDCAN_ReadByte();
-		printf("num:%d,version:%d\n",num,version);
-		printf("GetCommand:\n");
+//		printf("num:%d,version:%d\n",num,version);
+//		printf("GetCommand:\n");
 
 		for(int i=0;i<num;i++)
 		{
 			commandlist[i] = FDCAN_ReadByte();
-			printf("0x%x\n",commandlist[i]);
+//			printf("0x%x\n",commandlist[i]);
 		}
 
 		if((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
@@ -225,11 +225,11 @@ void FDCAN_GetID(void)
 	TxHeader.Identifier = GETID;
 
 	FDCAN_SendByte(0x00);
-	HAL_Delay(10);
+	HAL_Delay(2);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 	{
 		FDCAN_ReadBytes(data,FDCAN_DLC_BYTES_2);
-		printf("GetID:0x%x%x\n",*data,*(data+1));
+//		printf("GetID:0x%x%x\n",*data,*(data+1));
 		if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 		{
 			printf("GetID Success!\n");
@@ -252,18 +252,18 @@ void FDCAN_ReadMemory(void)
 	TxHeader.Identifier = READ;
 
 	FDCAN_SendBytes(txdata,FDCAN_DLC_BYTES_5);
-	HAL_Delay(10);
+	HAL_Delay(2);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 	{
-		printf("ReadMemoryData:\n");
+//		printf("ReadMemoryData:\n");
 		for(int i=0;i<4;i++)
 		{
 			FDCAN_ReadBytes(data,FDCAN_DLC_BYTES_64);
-			for (int j=0;j<64;j++)
-			{
-				printf("%x ",data[j]);
-			}
-			printf("\n");
+//			for (int j=0;j<64;j++)
+//			{
+//				printf("%x ",data[j]);
+//			}
+//			printf("\n");
 		}
 
 		if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
@@ -291,7 +291,7 @@ void FDCAN_WriteMemory(uint8_t *address, uint8_t *data)
 
 	FDCAN_SendBytes(address,FDCAN_DLC_BYTES_5);
 	FDCAN_TxConfig();
-	HAL_Delay(10);
+	HAL_Delay(2);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 	{
 		for (int i=0;i<4;i++)
@@ -304,9 +304,10 @@ void FDCAN_WriteMemory(uint8_t *address, uint8_t *data)
 //			}
 //			printf("\n");
 			FDCAN_SendBytes((data+i*64),FDCAN_DLC_BYTES_64);
+			HAL_Delay(1);
 		}
 
-		HAL_Delay(10);
+		HAL_Delay(7);
 		if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 		{
 			printf("WriteMemory Success!\n");
@@ -328,7 +329,7 @@ void FDCAN_EraseMemory(uint8_t *txdata, uint8_t *data)
 
 	FDCAN_SendBytes(txdata,FDCAN_DLC_BYTES_2);
 	FDCAN_TxConfig();
-	HAL_Delay(10);
+	HAL_Delay(2);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 	{
 		FDCAN_SendBytes(data,FDCAN_DLC_BYTES_64);
@@ -351,7 +352,7 @@ void FDCAN_EraseMemory(uint8_t *txdata, uint8_t *data)
 
 void FDCAN_Go(void)
 {
-	uint8_t txdata[4] = {0x08,0x01,0x00,0x00};
+	uint8_t txdata[4] = {0x08,0x00,0x30,0x00};
 	TxHeader.Identifier = GO;
 
 	FDCAN_SendBytes(txdata,FDCAN_DLC_BYTES_4);

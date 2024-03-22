@@ -368,43 +368,43 @@ HAL_StatusTypeDef HAL_FDCAN_Init(FDCAN_HandleTypeDef *hfdcan)
   CLEAR_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_CSR);
 
   /* Get tick */
-  tickstart = HAL_GetTick();
+//  tickstart = HAL_GetTick();
 
   /* Check Sleep mode acknowledge */
   while ((hfdcan->Instance->CCCR & FDCAN_CCCR_CSA) == FDCAN_CCCR_CSA)
   {
-    if ((HAL_GetTick() - tickstart) > FDCAN_TIMEOUT_VALUE)
-    {
-      /* Update error code */
-      hfdcan->ErrorCode |= HAL_FDCAN_ERROR_TIMEOUT;
-
-      /* Change FDCAN state */
-      hfdcan->State = HAL_FDCAN_STATE_ERROR;
-
-      return HAL_ERROR;
-    }
+//    if ((HAL_GetTick() - tickstart) > FDCAN_TIMEOUT_VALUE)
+//    {
+//      /* Update error code */
+//      hfdcan->ErrorCode |= HAL_FDCAN_ERROR_TIMEOUT;
+//
+//      /* Change FDCAN state */
+//      hfdcan->State = HAL_FDCAN_STATE_ERROR;
+//
+//      return HAL_ERROR;
+//    }
   }
 
   /* Request initialisation */
   SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_INIT);
 
   /* Get tick */
-  tickstart = HAL_GetTick();
+//  tickstart = HAL_GetTick();
 
   /* Wait until the INIT bit into CCCR register is set */
   while ((hfdcan->Instance->CCCR & FDCAN_CCCR_INIT) == 0U)
   {
     /* Check for the Timeout */
-    if ((HAL_GetTick() - tickstart) > FDCAN_TIMEOUT_VALUE)
-    {
-      /* Update error code */
-      hfdcan->ErrorCode |= HAL_FDCAN_ERROR_TIMEOUT;
-
-      /* Change FDCAN state */
-      hfdcan->State = HAL_FDCAN_STATE_ERROR;
-
-      return HAL_ERROR;
-    }
+//    if ((HAL_GetTick() - tickstart) > FDCAN_TIMEOUT_VALUE)
+//    {
+//      /* Update error code */
+//      hfdcan->ErrorCode |= HAL_FDCAN_ERROR_TIMEOUT;
+//
+//      /* Change FDCAN state */
+//      hfdcan->State = HAL_FDCAN_STATE_ERROR;
+//
+//      return HAL_ERROR;
+//    }
   }
 
   /* Enable configuration change */
@@ -418,34 +418,34 @@ HAL_StatusTypeDef HAL_FDCAN_Init(FDCAN_HandleTypeDef *hfdcan)
   }
 
   /* Set the no automatic retransmission */
-  if (hfdcan->Init.AutoRetransmission == ENABLE)
-  {
+//  if (hfdcan->Init.AutoRetransmission == ENABLE)
+//  {
     CLEAR_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_DAR);
-  }
-  else
-  {
-    SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_DAR);
-  }
+//  }
+//  else
+//  {
+//    SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_DAR);
+//  }
 
   /* Set the transmit pause feature */
-  if (hfdcan->Init.TransmitPause == ENABLE)
-  {
-    SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_TXP);
-  }
-  else
-  {
+//  if (hfdcan->Init.TransmitPause == ENABLE)
+//  {
+//    SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_TXP);
+//  }
+//  else
+//  {
     CLEAR_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_TXP);
-  }
+//  }
 
   /* Set the Protocol Exception Handling */
-  if (hfdcan->Init.ProtocolException == ENABLE)
-  {
-    CLEAR_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_PXHD);
-  }
-  else
-  {
+//  if (hfdcan->Init.ProtocolException == ENABLE)
+//  {
+//    CLEAR_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_PXHD);
+//  }
+//  else
+//  {
     SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_PXHD);
-  }
+//  }
 
   /* Set FDCAN Frame Format */
   MODIFY_REG(hfdcan->Instance->CCCR, FDCAN_FRAME_FD_BRS, hfdcan->Init.FrameFormat);
@@ -462,36 +462,36 @@ HAL_StatusTypeDef HAL_FDCAN_Init(FDCAN_HandleTypeDef *hfdcan)
      TEST.LBCK |   0    |     0      |     0      |    1     |    1
      CCCR.ASM  |   0    |     1      |     0      |    0     |    0
   */
-  if (hfdcan->Init.Mode == FDCAN_MODE_RESTRICTED_OPERATION)
-  {
-    /* Enable Restricted Operation mode */
-    SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_ASM);
-  }
-  else if (hfdcan->Init.Mode != FDCAN_MODE_NORMAL)
-  {
-    if (hfdcan->Init.Mode != FDCAN_MODE_BUS_MONITORING)
-    {
-      /* Enable write access to TEST register */
-      SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_TEST);
-
-      /* Enable LoopBack mode */
-      SET_BIT(hfdcan->Instance->TEST, FDCAN_TEST_LBCK);
-
-      if (hfdcan->Init.Mode == FDCAN_MODE_INTERNAL_LOOPBACK)
-      {
-        SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_MON);
-      }
-    }
-    else
-    {
-      /* Enable bus monitoring mode */
-      SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_MON);
-    }
-  }
-  else
-  {
-    /* Nothing to do: normal mode */
-  }
+//  if (hfdcan->Init.Mode == FDCAN_MODE_RESTRICTED_OPERATION)
+//  {
+//    /* Enable Restricted Operation mode */
+//    SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_ASM);
+//  }
+//  else if (hfdcan->Init.Mode != FDCAN_MODE_NORMAL)
+//  {
+//    if (hfdcan->Init.Mode != FDCAN_MODE_BUS_MONITORING)
+//    {
+//      /* Enable write access to TEST register */
+//      SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_TEST);
+//
+//      /* Enable LoopBack mode */
+//      SET_BIT(hfdcan->Instance->TEST, FDCAN_TEST_LBCK);
+//
+//      if (hfdcan->Init.Mode == FDCAN_MODE_INTERNAL_LOOPBACK)
+//      {
+//        SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_MON);
+//      }
+//    }
+//    else
+//    {
+//      /* Enable bus monitoring mode */
+//      SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_MON);
+//    }
+//  }
+//  else
+//  {
+//    /* Nothing to do: normal mode */
+//  }
 
   /* Set the nominal bit timing register */
   hfdcan->Instance->NBTP = ((((uint32_t)hfdcan->Init.NominalSyncJumpWidth - 1U) << FDCAN_NBTP_NSJW_Pos) | \
@@ -2904,83 +2904,83 @@ HAL_StatusTypeDef HAL_FDCAN_DeactivateNotification(FDCAN_HandleTypeDef *hfdcan, 
   */
 void HAL_FDCAN_IRQHandler(FDCAN_HandleTypeDef *hfdcan)
 {
-  uint32_t TxEventFifoITs;
+//  uint32_t TxEventFifoITs;
   uint32_t RxFifo0ITs;
-  uint32_t RxFifo1ITs;
-  uint32_t Errors;
-  uint32_t ErrorStatusITs;
-  uint32_t TransmittedBuffers;
-  uint32_t AbortedBuffers;
-  uint32_t itsource;
-  uint32_t itflag;
+//  uint32_t RxFifo1ITs;
+//  uint32_t Errors;
+//  uint32_t ErrorStatusITs;
+//  uint32_t TransmittedBuffers;
+//  uint32_t AbortedBuffers;
+//  uint32_t itsource;
+//  uint32_t itflag;
 
-  TxEventFifoITs = hfdcan->Instance->IR & FDCAN_TX_EVENT_FIFO_MASK;
-  TxEventFifoITs &= hfdcan->Instance->IE;
+//  TxEventFifoITs = hfdcan->Instance->IR & FDCAN_TX_EVENT_FIFO_MASK;
+//  TxEventFifoITs &= hfdcan->Instance->IE;
   RxFifo0ITs = hfdcan->Instance->IR & FDCAN_RX_FIFO0_MASK;
   RxFifo0ITs &= hfdcan->Instance->IE;
-  RxFifo1ITs = hfdcan->Instance->IR & FDCAN_RX_FIFO1_MASK;
-  RxFifo1ITs &= hfdcan->Instance->IE;
-  Errors = hfdcan->Instance->IR & FDCAN_ERROR_MASK;
-  Errors &= hfdcan->Instance->IE;
-  ErrorStatusITs = hfdcan->Instance->IR & FDCAN_ERROR_STATUS_MASK;
-  ErrorStatusITs &= hfdcan->Instance->IE;
-  itsource = hfdcan->Instance->IE;
-  itflag = hfdcan->Instance->IR;
+//  RxFifo1ITs = hfdcan->Instance->IR & FDCAN_RX_FIFO1_MASK;
+//  RxFifo1ITs &= hfdcan->Instance->IE;
+//  Errors = hfdcan->Instance->IR & FDCAN_ERROR_MASK;
+//  Errors &= hfdcan->Instance->IE;
+//  ErrorStatusITs = hfdcan->Instance->IR & FDCAN_ERROR_STATUS_MASK;
+//  ErrorStatusITs &= hfdcan->Instance->IE;
+//  itsource = hfdcan->Instance->IE;
+//  itflag = hfdcan->Instance->IR;
 
   /* High Priority Message interrupt management *******************************/
-  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_RX_HIGH_PRIORITY_MSG) != RESET)
-  {
-    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_RX_HIGH_PRIORITY_MSG) != RESET)
-    {
-      /* Clear the High Priority Message flag */
-      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_RX_HIGH_PRIORITY_MSG);
-
-#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
-      /* Call registered callback*/
-      hfdcan->HighPriorityMessageCallback(hfdcan);
-#else
-      /* High Priority Message Callback */
-      HAL_FDCAN_HighPriorityMessageCallback(hfdcan);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-    }
-  }
-
-  /* Transmission Abort interrupt management **********************************/
-  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_TX_ABORT_COMPLETE) != RESET)
-  {
-    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_TX_ABORT_COMPLETE) != RESET)
-    {
-      /* List of aborted monitored buffers */
-      AbortedBuffers = hfdcan->Instance->TXBCF;
-      AbortedBuffers &= hfdcan->Instance->TXBCIE;
-
-      /* Clear the Transmission Cancellation flag */
-      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_TX_ABORT_COMPLETE);
-
-#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
-      /* Call registered callback*/
-      hfdcan->TxBufferAbortCallback(hfdcan, AbortedBuffers);
-#else
-      /* Transmission Cancellation Callback */
-      HAL_FDCAN_TxBufferAbortCallback(hfdcan, AbortedBuffers);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-    }
-  }
-
-  /* Tx event FIFO interrupts management **************************************/
-  if (TxEventFifoITs != 0U)
-  {
-    /* Clear the Tx Event FIFO flags */
-    __HAL_FDCAN_CLEAR_FLAG(hfdcan, TxEventFifoITs);
-
-#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
-    /* Call registered callback*/
-    hfdcan->TxEventFifoCallback(hfdcan, TxEventFifoITs);
-#else
-    /* Tx Event FIFO Callback */
-    HAL_FDCAN_TxEventFifoCallback(hfdcan, TxEventFifoITs);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
+//  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_RX_HIGH_PRIORITY_MSG) != RESET)
+//  {
+//    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_RX_HIGH_PRIORITY_MSG) != RESET)
+//    {
+//      /* Clear the High Priority Message flag */
+//      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_RX_HIGH_PRIORITY_MSG);
+//
+//#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
+//      /* Call registered callback*/
+//      hfdcan->HighPriorityMessageCallback(hfdcan);
+//#else
+//      /* High Priority Message Callback */
+//      HAL_FDCAN_HighPriorityMessageCallback(hfdcan);
+//#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+//    }
+//  }
+//
+//  /* Transmission Abort interrupt management **********************************/
+//  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_TX_ABORT_COMPLETE) != RESET)
+//  {
+//    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_TX_ABORT_COMPLETE) != RESET)
+//    {
+//      /* List of aborted monitored buffers */
+//      AbortedBuffers = hfdcan->Instance->TXBCF;
+//      AbortedBuffers &= hfdcan->Instance->TXBCIE;
+//
+//      /* Clear the Transmission Cancellation flag */
+//      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_TX_ABORT_COMPLETE);
+//
+//#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
+//      /* Call registered callback*/
+//      hfdcan->TxBufferAbortCallback(hfdcan, AbortedBuffers);
+//#else
+//      /* Transmission Cancellation Callback */
+//      HAL_FDCAN_TxBufferAbortCallback(hfdcan, AbortedBuffers);
+//#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+//    }
+//  }
+//
+//  /* Tx event FIFO interrupts management **************************************/
+//  if (TxEventFifoITs != 0U)
+//  {
+//    /* Clear the Tx Event FIFO flags */
+//    __HAL_FDCAN_CLEAR_FLAG(hfdcan, TxEventFifoITs);
+//
+//#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
+//    /* Call registered callback*/
+//    hfdcan->TxEventFifoCallback(hfdcan, TxEventFifoITs);
+//#else
+//    /* Tx Event FIFO Callback */
+//    HAL_FDCAN_TxEventFifoCallback(hfdcan, TxEventFifoITs);
+//#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+//  }
 
   /* Rx FIFO 0 interrupts management ******************************************/
   if (RxFifo0ITs != 0U)
@@ -2998,144 +2998,144 @@ void HAL_FDCAN_IRQHandler(FDCAN_HandleTypeDef *hfdcan)
   }
 
   /* Rx FIFO 1 interrupts management ******************************************/
-  if (RxFifo1ITs != 0U)
-  {
-    /* Clear the Rx FIFO 1 flags */
-    __HAL_FDCAN_CLEAR_FLAG(hfdcan, RxFifo1ITs);
-
-#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
-    /* Call registered callback*/
-    hfdcan->RxFifo1Callback(hfdcan, RxFifo1ITs);
-#else
-    /* Rx FIFO 1 Callback */
-    HAL_FDCAN_RxFifo1Callback(hfdcan, RxFifo1ITs);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
-
-  /* Tx FIFO empty interrupt management ***************************************/
-  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_TX_FIFO_EMPTY) != RESET)
-  {
-    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_TX_FIFO_EMPTY) != RESET)
-    {
-      /* Clear the Tx FIFO empty flag */
-      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_TX_FIFO_EMPTY);
-
-#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
-      /* Call registered callback*/
-      hfdcan->TxFifoEmptyCallback(hfdcan);
-#else
-      /* Tx FIFO empty Callback */
-      HAL_FDCAN_TxFifoEmptyCallback(hfdcan);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-    }
-  }
-
-  /* Transmission Complete interrupt management *******************************/
-  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_TX_COMPLETE) != RESET)
-  {
-    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_TX_COMPLETE) != RESET)
-    {
-      /* List of transmitted monitored buffers */
-      TransmittedBuffers = hfdcan->Instance->TXBTO;
-      TransmittedBuffers &= hfdcan->Instance->TXBTIE;
-
-      /* Clear the Transmission Complete flag */
-      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_TX_COMPLETE);
-
-#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
-      /* Call registered callback*/
-      hfdcan->TxBufferCompleteCallback(hfdcan, TransmittedBuffers);
-#else
-      /* Transmission Complete Callback */
-      HAL_FDCAN_TxBufferCompleteCallback(hfdcan, TransmittedBuffers);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-    }
-  }
-
-  /* Timestamp Wraparound interrupt management ********************************/
-  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_TIMESTAMP_WRAPAROUND) != RESET)
-  {
-    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_TIMESTAMP_WRAPAROUND) != RESET)
-    {
-      /* Clear the Timestamp Wraparound flag */
-      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_TIMESTAMP_WRAPAROUND);
-
-#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
-      /* Call registered callback*/
-      hfdcan->TimestampWraparoundCallback(hfdcan);
-#else
-      /* Timestamp Wraparound Callback */
-      HAL_FDCAN_TimestampWraparoundCallback(hfdcan);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-    }
-  }
-
-  /* Timeout Occurred interrupt management ************************************/
-  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_TIMEOUT_OCCURRED) != RESET)
-  {
-    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_TIMEOUT_OCCURRED) != RESET)
-    {
-      /* Clear the Timeout Occurred flag */
-      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_TIMEOUT_OCCURRED);
-
-#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
-      /* Call registered callback*/
-      hfdcan->TimeoutOccurredCallback(hfdcan);
-#else
-      /* Timeout Occurred Callback */
-      HAL_FDCAN_TimeoutOccurredCallback(hfdcan);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-    }
-  }
-
-  /* Message RAM access failure interrupt management **************************/
-  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_RAM_ACCESS_FAILURE) != RESET)
-  {
-    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_RAM_ACCESS_FAILURE) != RESET)
-    {
-      /* Clear the Message RAM access failure flag */
-      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_RAM_ACCESS_FAILURE);
-
-      /* Update error code */
-      hfdcan->ErrorCode |= HAL_FDCAN_ERROR_RAM_ACCESS;
-    }
-  }
-
-  /* Error Status interrupts management ***************************************/
-  if (ErrorStatusITs != 0U)
-  {
-    /* Clear the Error flags */
-    __HAL_FDCAN_CLEAR_FLAG(hfdcan, ErrorStatusITs);
-
-#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
-    /* Call registered callback*/
-    hfdcan->ErrorStatusCallback(hfdcan, ErrorStatusITs);
-#else
-    /* Error Status Callback */
-    HAL_FDCAN_ErrorStatusCallback(hfdcan, ErrorStatusITs);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
-
-  /* Error interrupts management **********************************************/
-  if (Errors != 0U)
-  {
-    /* Clear the Error flags */
-    __HAL_FDCAN_CLEAR_FLAG(hfdcan, Errors);
-
-    /* Update error code */
-    hfdcan->ErrorCode |= Errors;
-  }
-
-  if (hfdcan->ErrorCode != HAL_FDCAN_ERROR_NONE)
-  {
-#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
-    /* Call registered callback*/
-    hfdcan->ErrorCallback(hfdcan);
-#else
-    /* Error Callback */
-    HAL_FDCAN_ErrorCallback(hfdcan);
-#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
-  }
+//  if (RxFifo1ITs != 0U)
+//  {
+//    /* Clear the Rx FIFO 1 flags */
+//    __HAL_FDCAN_CLEAR_FLAG(hfdcan, RxFifo1ITs);
+//
+//#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
+//    /* Call registered callback*/
+//    hfdcan->RxFifo1Callback(hfdcan, RxFifo1ITs);
+//#else
+//    /* Rx FIFO 1 Callback */
+//    HAL_FDCAN_RxFifo1Callback(hfdcan, RxFifo1ITs);
+//#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+//  }
+//
+//  /* Tx FIFO empty interrupt management ***************************************/
+//  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_TX_FIFO_EMPTY) != RESET)
+//  {
+//    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_TX_FIFO_EMPTY) != RESET)
+//    {
+//      /* Clear the Tx FIFO empty flag */
+//      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_TX_FIFO_EMPTY);
+//
+//#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
+//      /* Call registered callback*/
+//      hfdcan->TxFifoEmptyCallback(hfdcan);
+//#else
+//      /* Tx FIFO empty Callback */
+//      HAL_FDCAN_TxFifoEmptyCallback(hfdcan);
+//#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+//    }
+//  }
+//
+//  /* Transmission Complete interrupt management *******************************/
+//  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_TX_COMPLETE) != RESET)
+//  {
+//    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_TX_COMPLETE) != RESET)
+//    {
+//      /* List of transmitted monitored buffers */
+//      TransmittedBuffers = hfdcan->Instance->TXBTO;
+//      TransmittedBuffers &= hfdcan->Instance->TXBTIE;
+//
+//      /* Clear the Transmission Complete flag */
+//      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_TX_COMPLETE);
+//
+//#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
+//      /* Call registered callback*/
+//      hfdcan->TxBufferCompleteCallback(hfdcan, TransmittedBuffers);
+//#else
+//      /* Transmission Complete Callback */
+//      HAL_FDCAN_TxBufferCompleteCallback(hfdcan, TransmittedBuffers);
+//#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+//    }
+//  }
+//
+//  /* Timestamp Wraparound interrupt management ********************************/
+//  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_TIMESTAMP_WRAPAROUND) != RESET)
+//  {
+//    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_TIMESTAMP_WRAPAROUND) != RESET)
+//    {
+//      /* Clear the Timestamp Wraparound flag */
+//      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_TIMESTAMP_WRAPAROUND);
+//
+//#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
+//      /* Call registered callback*/
+//      hfdcan->TimestampWraparoundCallback(hfdcan);
+//#else
+//      /* Timestamp Wraparound Callback */
+//      HAL_FDCAN_TimestampWraparoundCallback(hfdcan);
+//#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+//    }
+//  }
+//
+//  /* Timeout Occurred interrupt management ************************************/
+//  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_TIMEOUT_OCCURRED) != RESET)
+//  {
+//    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_TIMEOUT_OCCURRED) != RESET)
+//    {
+//      /* Clear the Timeout Occurred flag */
+//      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_TIMEOUT_OCCURRED);
+//
+//#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
+//      /* Call registered callback*/
+//      hfdcan->TimeoutOccurredCallback(hfdcan);
+//#else
+//      /* Timeout Occurred Callback */
+//      HAL_FDCAN_TimeoutOccurredCallback(hfdcan);
+//#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+//    }
+//  }
+//
+//  /* Message RAM access failure interrupt management **************************/
+//  if (FDCAN_CHECK_FLAG(itflag, FDCAN_FLAG_RAM_ACCESS_FAILURE) != RESET)
+//  {
+//    if (FDCAN_CHECK_IT_SOURCE(itsource, FDCAN_IT_RAM_ACCESS_FAILURE) != RESET)
+//    {
+//      /* Clear the Message RAM access failure flag */
+//      __HAL_FDCAN_CLEAR_FLAG(hfdcan, FDCAN_FLAG_RAM_ACCESS_FAILURE);
+//
+//      /* Update error code */
+//      hfdcan->ErrorCode |= HAL_FDCAN_ERROR_RAM_ACCESS;
+//    }
+//  }
+//
+//  /* Error Status interrupts management ***************************************/
+//  if (ErrorStatusITs != 0U)
+//  {
+//    /* Clear the Error flags */
+//    __HAL_FDCAN_CLEAR_FLAG(hfdcan, ErrorStatusITs);
+//
+//#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
+//    /* Call registered callback*/
+//    hfdcan->ErrorStatusCallback(hfdcan, ErrorStatusITs);
+//#else
+//    /* Error Status Callback */
+//    HAL_FDCAN_ErrorStatusCallback(hfdcan, ErrorStatusITs);
+//#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+//  }
+//
+//  /* Error interrupts management **********************************************/
+//  if (Errors != 0U)
+//  {
+//    /* Clear the Error flags */
+//    __HAL_FDCAN_CLEAR_FLAG(hfdcan, Errors);
+//
+//    /* Update error code */
+//    hfdcan->ErrorCode |= Errors;
+//  }
+//
+//  if (hfdcan->ErrorCode != HAL_FDCAN_ERROR_NONE)
+//  {
+//#if USE_HAL_FDCAN_REGISTER_CALLBACKS == 1
+//    /* Call registered callback*/
+//    hfdcan->ErrorCallback(hfdcan);
+//#else
+//    /* Error Callback */
+//    HAL_FDCAN_ErrorCallback(hfdcan);
+//#endif /* USE_HAL_FDCAN_REGISTER_CALLBACKS */
+//  }
 }
 
 /**

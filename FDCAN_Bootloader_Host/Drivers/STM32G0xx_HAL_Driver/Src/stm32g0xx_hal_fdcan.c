@@ -295,10 +295,10 @@ HAL_StatusTypeDef HAL_FDCAN_Init(FDCAN_HandleTypeDef *hfdcan)
   uint32_t tickstart;
 
   /* Check FDCAN handle */
-  if (hfdcan == NULL)
-  {
-    return HAL_ERROR;
-  }
+//  if (hfdcan == NULL)
+//  {
+//    return HAL_ERROR;
+//  }
 
   /* Check function parameters */
   assert_param(IS_FDCAN_ALL_INSTANCE(hfdcan->Instance));
@@ -368,43 +368,43 @@ HAL_StatusTypeDef HAL_FDCAN_Init(FDCAN_HandleTypeDef *hfdcan)
   CLEAR_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_CSR);
 
   /* Get tick */
-  tickstart = HAL_GetTick();
+//  tickstart = HAL_GetTick();
 
   /* Check Sleep mode acknowledge */
   while ((hfdcan->Instance->CCCR & FDCAN_CCCR_CSA) == FDCAN_CCCR_CSA)
   {
-    if ((HAL_GetTick() - tickstart) > FDCAN_TIMEOUT_VALUE)
-    {
-      /* Update error code */
-      hfdcan->ErrorCode |= HAL_FDCAN_ERROR_TIMEOUT;
-
-      /* Change FDCAN state */
-      hfdcan->State = HAL_FDCAN_STATE_ERROR;
-
-      return HAL_ERROR;
-    }
+//    if ((HAL_GetTick() - tickstart) > FDCAN_TIMEOUT_VALUE)
+//    {
+//      /* Update error code */
+//      hfdcan->ErrorCode |= HAL_FDCAN_ERROR_TIMEOUT;
+//
+//      /* Change FDCAN state */
+//      hfdcan->State = HAL_FDCAN_STATE_ERROR;
+//
+//      return HAL_ERROR;
+//    }
   }
 
   /* Request initialisation */
   SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_INIT);
 
   /* Get tick */
-  tickstart = HAL_GetTick();
+//  tickstart = HAL_GetTick();
 
   /* Wait until the INIT bit into CCCR register is set */
   while ((hfdcan->Instance->CCCR & FDCAN_CCCR_INIT) == 0U)
   {
     /* Check for the Timeout */
-    if ((HAL_GetTick() - tickstart) > FDCAN_TIMEOUT_VALUE)
-    {
-      /* Update error code */
-      hfdcan->ErrorCode |= HAL_FDCAN_ERROR_TIMEOUT;
-
-      /* Change FDCAN state */
-      hfdcan->State = HAL_FDCAN_STATE_ERROR;
-
-      return HAL_ERROR;
-    }
+//    if ((HAL_GetTick() - tickstart) > FDCAN_TIMEOUT_VALUE)
+//    {
+//      /* Update error code */
+//      hfdcan->ErrorCode |= HAL_FDCAN_ERROR_TIMEOUT;
+//
+//      /* Change FDCAN state */
+//      hfdcan->State = HAL_FDCAN_STATE_ERROR;
+//
+//      return HAL_ERROR;
+//    }
   }
 
   /* Enable configuration change */
@@ -462,36 +462,36 @@ HAL_StatusTypeDef HAL_FDCAN_Init(FDCAN_HandleTypeDef *hfdcan)
      TEST.LBCK |   0    |     0      |     0      |    1     |    1
      CCCR.ASM  |   0    |     1      |     0      |    0     |    0
   */
-  if (hfdcan->Init.Mode == FDCAN_MODE_RESTRICTED_OPERATION)
-  {
-    /* Enable Restricted Operation mode */
-    SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_ASM);
-  }
-  else if (hfdcan->Init.Mode != FDCAN_MODE_NORMAL)
-  {
-    if (hfdcan->Init.Mode != FDCAN_MODE_BUS_MONITORING)
-    {
-      /* Enable write access to TEST register */
-      SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_TEST);
-
-      /* Enable LoopBack mode */
-      SET_BIT(hfdcan->Instance->TEST, FDCAN_TEST_LBCK);
-
-      if (hfdcan->Init.Mode == FDCAN_MODE_INTERNAL_LOOPBACK)
-      {
-        SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_MON);
-      }
-    }
-    else
-    {
-      /* Enable bus monitoring mode */
-      SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_MON);
-    }
-  }
-  else
-  {
-    /* Nothing to do: normal mode */
-  }
+//  if (hfdcan->Init.Mode == FDCAN_MODE_RESTRICTED_OPERATION)
+//  {
+//    /* Enable Restricted Operation mode */
+//    SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_ASM);
+//  }
+//  else if (hfdcan->Init.Mode != FDCAN_MODE_NORMAL)
+//  {
+//    if (hfdcan->Init.Mode != FDCAN_MODE_BUS_MONITORING)
+//    {
+//      /* Enable write access to TEST register */
+//      SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_TEST);
+//
+//      /* Enable LoopBack mode */
+//      SET_BIT(hfdcan->Instance->TEST, FDCAN_TEST_LBCK);
+//
+//      if (hfdcan->Init.Mode == FDCAN_MODE_INTERNAL_LOOPBACK)
+//      {
+//        SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_MON);
+//      }
+//    }
+//    else
+//    {
+//      /* Enable bus monitoring mode */
+//      SET_BIT(hfdcan->Instance->CCCR, FDCAN_CCCR_MON);
+//    }
+//  }
+//  else
+//  {
+//    /* Nothing to do: normal mode */
+//  }
 
   /* Set the nominal bit timing register */
   hfdcan->Instance->NBTP = ((((uint32_t)hfdcan->Init.NominalSyncJumpWidth - 1U) << FDCAN_NBTP_NSJW_Pos) | \

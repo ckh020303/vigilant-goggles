@@ -105,7 +105,7 @@ int main(void)
   uint32_t add;
   uint8_t data[256]={0};
   uint8_t data_e[64]={0};
-  uint8_t txdata_w[5] = {0x08,0x01,0x00,0x00,0xFF};
+  uint8_t txdata_w[5] = {0x08,0x00,0x30,0x00,0xFF};
   uint8_t txdata_e[2] = {0x00};
   /* USER CODE END SysInit */
 
@@ -116,7 +116,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   printf("host\n");
   FDCAN_Enable();
-  HAL_Delay(1000);
 //  FDCAN_GetCommand();
 //  FDCAN_GetID();
 //  FDCAN_ReadMemory();
@@ -131,23 +130,40 @@ int main(void)
   /* USER CODE END 2 */
 
   /* Infinite loop */
-	/* USER CODE BEGIN WHILE */
+  /* USER CODE BEGIN WHILE */
     FDCAN_GetCommand();
     FDCAN_GetID();
 
     count=0;
-    for(i=1;i<64;i+=2)
+    txdata_e[1] = 20;
+    for(i=0;i<txdata_e[1];i++)
     {
-    	data_e[i] = 0x20+count++;
+    	data_e[i*2+1] = 6+count++;
     }
 
-    txdata_e[1] = 0x11;
-
     FDCAN_EraseMemory(txdata_e,data_e);
-    HAL_Delay(1000);
+    HAL_Delay(350);
 
-    address = 0x08010000;
-    for(int j=0;j<23;j++)
+    txdata_e[1] = 20;
+    for(i=0;i<txdata_e[1];i++)
+	{
+		data_e[i*2+1] = 6+count++;
+	}
+
+	FDCAN_EraseMemory(txdata_e,data_e);
+	HAL_Delay(350);
+
+	txdata_e[1] = 18;
+	for(i=0;i<txdata_e[1];i++)
+	{
+		data_e[i*2+1] = 6+count++;
+	}
+
+	FDCAN_EraseMemory(txdata_e,data_e);
+	HAL_Delay(350);
+
+    address = 0x08003000;
+    for(int j=0;j<236;j++)	//
     {
     	count=0;
     	memset(data, 0, sizeof(data));
@@ -160,8 +176,12 @@ int main(void)
 			address+=4;
 		}
     	FDCAN_WriteMemory(txdata_w,data);
+    	if(txdata_w[2] == 0xFF)
+		{
+			txdata_w[1]++;
+		}
     	txdata_w[2]++;
-    	HAL_Delay(100);
+    	HAL_Delay(20);
     }
 
     HAL_Delay(1000);

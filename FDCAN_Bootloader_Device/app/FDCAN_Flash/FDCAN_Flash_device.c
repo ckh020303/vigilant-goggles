@@ -58,8 +58,8 @@ void FDCAN_Enable(void)
 
 	isCommandID = 1;
 
-	TxHeader.Identifier = 0x111;
-	TxHeader.IdType = FDCAN_STANDARD_ID;
+	TxHeader.Identifier = 0xFFF111;
+	TxHeader.IdType = FDCAN_EXTENDED_ID;
 	TxHeader.TxFrameType = FDCAN_DATA_FRAME;
 	TxHeader.DataLength = FDCAN_DLC_BYTES_64;
 	TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
@@ -71,8 +71,8 @@ void FDCAN_Enable(void)
 
 void FDCAN_TxConfig(FDCAN_TxHeaderTypeDef *header)
 {
-	header->Identifier = 0x111;
-	header->IdType = FDCAN_STANDARD_ID;
+	header->Identifier = 0xFFF111;
+	header->IdType = FDCAN_EXTENDED_ID;
 	header->TxFrameType = FDCAN_DATA_FRAME;
 	header->DataLength = FDCAN_DLC_BYTES_64;
 	header->ErrorStateIndicator = FDCAN_ESI_ACTIVE;
@@ -153,13 +153,19 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 	if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
 	{
 	  /* Retrieve Rx messages from RX FIFO0 */
-		if(isCommandID == 1)
+		HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &(header.RxHeader), header.data);
+		if((header.RxHeader.Identifier == GET) || (header.RxHeader.Identifier == GETID)\
+				|| (header.RxHeader.Identifier == READ) || (header.RxHeader.Identifier == GO)\
+				|| (header.RxHeader.Identifier == WRITE) || (header.RxHeader.Identifier == ERASE)\
+				|| (header.RxHeader.Identifier == 0xFFF111) )
 		{
-			isSelectID = 1;
+			write(&header);
+			if(isCommandID == 1)
+			{
+				isSelectID = 1;
+			}
 		}
 
-		HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &(header.RxHeader), header.data);
-		write(&header);
 	}
 }
 
@@ -340,12 +346,13 @@ void FDCAN_WriteMemory_d(void)
 
 			data_length = 0;
 
-			HAL_Delay(15);
+			HAL_Delay(10);
 			if (count != 0U)
 			{
 				while (data_length != count)
 				{
 					FDCAN_ReadBytes(&data[data_length * 64U], FDCAN_DLC_BYTES_64);
+					HAL_Delay(5);
 					data_length++;
 				}
 			}

@@ -18,19 +18,19 @@ typedef struct
 #define DEVICE_ID_LSB                     0x67              /* LSB byte of device ID */
 #define OPENBL_FDCAN_COMMANDS_NB             11U    /* Number of supported commands */
 
-#define GET			0x00
-#define GETVE		0x01
-#define GETID		0x02
+#define GET			0xFFFF00
+#define GETVE		0xFFFF01
+#define GETID		0xFFFF02
 
-#define READ 		0x11
-#define GO			0x21
-#define WRITE		0x31
-#define ERASE		0x44
+#define READ 		0xFFFF11
+#define GO			0xFFFF21
+#define WRITE		0xFFFF31
+#define ERASE		0xFFFF44
 
-#define WREN		0x63
-#define WRDS		0x73
-#define RDEN		0x82
-#define RDDS		0x92
+#define WREN		0xFFFF63
+#define WRDS		0xFFFF73
+#define RDEN		0xFFFF82
+#define RDDS		0xFFFF92
 
 #define ACK_BYTE			0x79
 #define NACK_BYTE		0x1F

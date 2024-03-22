@@ -198,17 +198,17 @@ void HAL_GPIO_Init(GPIO_TypeDef  *GPIOx, GPIO_InitTypeDef *GPIO_Init)
         GPIOx->OTYPER = temp;
       }
 
-      if ((GPIO_Init->Mode & GPIO_MODE) != MODE_ANALOG)
-      {
-        /* Check the Pull parameter */
-        assert_param(IS_GPIO_PULL(GPIO_Init->Pull));
-
-        /* Activate the Pull-up or Pull down resistor for the current IO */
-        temp = GPIOx->PUPDR;
-        temp &= ~(GPIO_PUPDR_PUPD0 << (position * 2u));
-        temp |= ((GPIO_Init->Pull) << (position * 2u));
-        GPIOx->PUPDR = temp;
-      }
+//      if ((GPIO_Init->Mode & GPIO_MODE) != MODE_ANALOG)
+//      {
+//        /* Check the Pull parameter */
+//        assert_param(IS_GPIO_PULL(GPIO_Init->Pull));
+//
+//        /* Activate the Pull-up or Pull down resistor for the current IO */
+//        temp = GPIOx->PUPDR;
+//        temp &= ~(GPIO_PUPDR_PUPD0 << (position * 2u));
+//        temp |= ((GPIO_Init->Pull) << (position * 2u));
+//        GPIOx->PUPDR = temp;
+//      }
 
       /* In case of Alternate function mode selection */
       if ((GPIO_Init->Mode & GPIO_MODE) == MODE_AF)
@@ -232,47 +232,47 @@ void HAL_GPIO_Init(GPIO_TypeDef  *GPIOx, GPIO_InitTypeDef *GPIO_Init)
 
       /*--------------------- EXTI Mode Configuration ------------------------*/
       /* Configure the External Interrupt or event for the current IO */
-      if ((GPIO_Init->Mode & EXTI_MODE) != 0x00u)
-      {
-        temp = EXTI->EXTICR[position >> 2u];
-        temp &= ~(0x0FuL << (8u * (position & 0x03u)));
-        temp |= (GPIO_GET_INDEX(GPIOx) << (8u * (position & 0x03u)));
-        EXTI->EXTICR[position >> 2u] = temp;
-
-        /* Clear Rising Falling edge configuration */
-        temp = EXTI->RTSR1;
-        temp &= ~(iocurrent);
-        if ((GPIO_Init->Mode & TRIGGER_RISING) != 0x00u)
-        {
-          temp |= iocurrent;
-        }
-        EXTI->RTSR1 = temp;
-
-        temp = EXTI->FTSR1;
-        temp &= ~(iocurrent);
-        if ((GPIO_Init->Mode & TRIGGER_FALLING) != 0x00u)
-        {
-          temp |= iocurrent;
-        }
-        EXTI->FTSR1 = temp;
-
-        /* Clear EXTI line configuration */
-        temp = EXTI->EMR1;
-        temp &= ~(iocurrent);
-        if ((GPIO_Init->Mode & EXTI_EVT) != 0x00u)
-        {
-          temp |= iocurrent;
-        }
-        EXTI->EMR1 = temp;
-
-        temp = EXTI->IMR1;
-        temp &= ~(iocurrent);
-        if ((GPIO_Init->Mode & EXTI_IT) != 0x00u)
-        {
-          temp |= iocurrent;
-        }
-        EXTI->IMR1 = temp;
-      }
+//      if ((GPIO_Init->Mode & EXTI_MODE) != 0x00u)
+//      {
+//        temp = EXTI->EXTICR[position >> 2u];
+//        temp &= ~(0x0FuL << (8u * (position & 0x03u)));
+//        temp |= (GPIO_GET_INDEX(GPIOx) << (8u * (position & 0x03u)));
+//        EXTI->EXTICR[position >> 2u] = temp;
+//
+//        /* Clear Rising Falling edge configuration */
+//        temp = EXTI->RTSR1;
+//        temp &= ~(iocurrent);
+//        if ((GPIO_Init->Mode & TRIGGER_RISING) != 0x00u)
+//        {
+//          temp |= iocurrent;
+//        }
+//        EXTI->RTSR1 = temp;
+//
+//        temp = EXTI->FTSR1;
+//        temp &= ~(iocurrent);
+//        if ((GPIO_Init->Mode & TRIGGER_FALLING) != 0x00u)
+//        {
+//          temp |= iocurrent;
+//        }
+//        EXTI->FTSR1 = temp;
+//
+//        /* Clear EXTI line configuration */
+//        temp = EXTI->EMR1;
+//        temp &= ~(iocurrent);
+//        if ((GPIO_Init->Mode & EXTI_EVT) != 0x00u)
+//        {
+//          temp |= iocurrent;
+//        }
+//        EXTI->EMR1 = temp;
+//
+//        temp = EXTI->IMR1;
+//        temp &= ~(iocurrent);
+//        if ((GPIO_Init->Mode & EXTI_IT) != 0x00u)
+//        {
+//          temp |= iocurrent;
+//        }
+//        EXTI->IMR1 = temp;
+//      }
     }
 
     position++;

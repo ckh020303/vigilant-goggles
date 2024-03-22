@@ -120,114 +120,114 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
   assert_param(IS_RCC_PERIPHCLOCK(PeriphClkInit->PeriphClockSelection));
 
   /*-------------------------- RTC clock source configuration ----------------------*/
-  if ((PeriphClkInit->PeriphClockSelection & RCC_PERIPHCLK_RTC) == RCC_PERIPHCLK_RTC)
-  {
-    FlagStatus       pwrclkchanged = RESET;
-
-    /* Check for RTC Parameters used to output RTCCLK */
-    assert_param(IS_RCC_RTCCLKSOURCE(PeriphClkInit->RTCClockSelection));
-
-    /* Enable Power Clock */
-    if (__HAL_RCC_PWR_IS_CLK_DISABLED())
-    {
-      __HAL_RCC_PWR_CLK_ENABLE();
-      pwrclkchanged = SET;
-    }
-
-    /* Enable write access to Backup domain */
-    SET_BIT(PWR->CR1, PWR_CR1_DBP);
-
-    /* Wait for Backup domain Write protection disable */
-    tickstart = HAL_GetTick();
-
-    while ((PWR->CR1 & PWR_CR1_DBP) == 0U)
-    {
-      if ((HAL_GetTick() - tickstart) > RCC_DBP_TIMEOUT_VALUE)
-      {
-        ret = HAL_TIMEOUT;
-        break;
-      }
-    }
-
-    if (ret == HAL_OK)
-    {
-      /* Reset the Backup domain only if the RTC Clock source selection is modified from default */
-      tmpregister = READ_BIT(RCC->BDCR, RCC_BDCR_RTCSEL);
-
-      /* Reset the Backup domain only if the RTC Clock source selection is modified */
-      if ((tmpregister != RCC_RTCCLKSOURCE_NONE) && (tmpregister != PeriphClkInit->RTCClockSelection))
-      {
-        /* Store the content of BDCR register before the reset of Backup Domain */
-        tmpregister = READ_BIT(RCC->BDCR, ~(RCC_BDCR_RTCSEL));
-        /* RTC Clock selection can be changed only if the Backup Domain is reset */
-        __HAL_RCC_BACKUPRESET_FORCE();
-        __HAL_RCC_BACKUPRESET_RELEASE();
-        /* Restore the Content of BDCR register */
-        RCC->BDCR = tmpregister;
-      }
-
-      /* Wait for LSE reactivation if LSE was enable prior to Backup Domain reset */
-      if (HAL_IS_BIT_SET(tmpregister, RCC_BDCR_LSEON))
-      {
-        /* Get Start Tick*/
-        tickstart = HAL_GetTick();
-
-        /* Wait till LSE is ready */
-        while (READ_BIT(RCC->BDCR, RCC_BDCR_LSERDY) == 0U)
-        {
-          if ((HAL_GetTick() - tickstart) > RCC_LSE_TIMEOUT_VALUE)
-          {
-            ret = HAL_TIMEOUT;
-            break;
-          }
-        }
-      }
-
-      if (ret == HAL_OK)
-      {
-        /* Apply new RTC clock source selection */
-        __HAL_RCC_RTC_CONFIG(PeriphClkInit->RTCClockSelection);
-      }
-      else
-      {
-        /* set overall return value */
-        status = ret;
-      }
-    }
-    else
-    {
-      /* set overall return value */
-      status = ret;
-    }
-
-    /* Restore clock configuration if changed */
-    if (pwrclkchanged == SET)
-    {
-      __HAL_RCC_PWR_CLK_DISABLE();
-    }
-  }
-
-  /*-------------------------- USART1 clock source configuration -------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_USART1) == RCC_PERIPHCLK_USART1)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_USART1CLKSOURCE(PeriphClkInit->Usart1ClockSelection));
-
-    /* Configure the USART1 clock source */
-    __HAL_RCC_USART1_CONFIG(PeriphClkInit->Usart1ClockSelection);
-  }
-
-#if defined(RCC_CCIPR_USART2SEL)
-  /*-------------------------- USART2 clock source configuration -------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_USART2) == RCC_PERIPHCLK_USART2)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_USART2CLKSOURCE(PeriphClkInit->Usart2ClockSelection));
-
-    /* Configure the USART2 clock source */
-    __HAL_RCC_USART2_CONFIG(PeriphClkInit->Usart2ClockSelection);
-  }
-#endif /* RCC_CCIPR_USART2SEL */
+//  if ((PeriphClkInit->PeriphClockSelection & RCC_PERIPHCLK_RTC) == RCC_PERIPHCLK_RTC)
+//  {
+//    FlagStatus       pwrclkchanged = RESET;
+//
+//    /* Check for RTC Parameters used to output RTCCLK */
+//    assert_param(IS_RCC_RTCCLKSOURCE(PeriphClkInit->RTCClockSelection));
+//
+//    /* Enable Power Clock */
+//    if (__HAL_RCC_PWR_IS_CLK_DISABLED())
+//    {
+//      __HAL_RCC_PWR_CLK_ENABLE();
+//      pwrclkchanged = SET;
+//    }
+//
+//    /* Enable write access to Backup domain */
+//    SET_BIT(PWR->CR1, PWR_CR1_DBP);
+//
+//    /* Wait for Backup domain Write protection disable */
+//    tickstart = HAL_GetTick();
+//
+//    while ((PWR->CR1 & PWR_CR1_DBP) == 0U)
+//    {
+//      if ((HAL_GetTick() - tickstart) > RCC_DBP_TIMEOUT_VALUE)
+//      {
+//        ret = HAL_TIMEOUT;
+//        break;
+//      }
+//    }
+//
+//    if (ret == HAL_OK)
+//    {
+//      /* Reset the Backup domain only if the RTC Clock source selection is modified from default */
+//      tmpregister = READ_BIT(RCC->BDCR, RCC_BDCR_RTCSEL);
+//
+//      /* Reset the Backup domain only if the RTC Clock source selection is modified */
+//      if ((tmpregister != RCC_RTCCLKSOURCE_NONE) && (tmpregister != PeriphClkInit->RTCClockSelection))
+//      {
+//        /* Store the content of BDCR register before the reset of Backup Domain */
+//        tmpregister = READ_BIT(RCC->BDCR, ~(RCC_BDCR_RTCSEL));
+//        /* RTC Clock selection can be changed only if the Backup Domain is reset */
+//        __HAL_RCC_BACKUPRESET_FORCE();
+//        __HAL_RCC_BACKUPRESET_RELEASE();
+//        /* Restore the Content of BDCR register */
+//        RCC->BDCR = tmpregister;
+//      }
+//
+//      /* Wait for LSE reactivation if LSE was enable prior to Backup Domain reset */
+//      if (HAL_IS_BIT_SET(tmpregister, RCC_BDCR_LSEON))
+//      {
+//        /* Get Start Tick*/
+//        tickstart = HAL_GetTick();
+//
+//        /* Wait till LSE is ready */
+//        while (READ_BIT(RCC->BDCR, RCC_BDCR_LSERDY) == 0U)
+//        {
+//          if ((HAL_GetTick() - tickstart) > RCC_LSE_TIMEOUT_VALUE)
+//          {
+//            ret = HAL_TIMEOUT;
+//            break;
+//          }
+//        }
+//      }
+//
+//      if (ret == HAL_OK)
+//      {
+//        /* Apply new RTC clock source selection */
+//        __HAL_RCC_RTC_CONFIG(PeriphClkInit->RTCClockSelection);
+//      }
+//      else
+//      {
+//        /* set overall return value */
+//        status = ret;
+//      }
+//    }
+//    else
+//    {
+//      /* set overall return value */
+//      status = ret;
+//    }
+//
+//    /* Restore clock configuration if changed */
+//    if (pwrclkchanged == SET)
+//    {
+//      __HAL_RCC_PWR_CLK_DISABLE();
+//    }
+//  }
+//
+//  /*-------------------------- USART1 clock source configuration -------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_USART1) == RCC_PERIPHCLK_USART1)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_USART1CLKSOURCE(PeriphClkInit->Usart1ClockSelection));
+//
+//    /* Configure the USART1 clock source */
+//    __HAL_RCC_USART1_CONFIG(PeriphClkInit->Usart1ClockSelection);
+//  }
+//
+//#if defined(RCC_CCIPR_USART2SEL)
+//  /*-------------------------- USART2 clock source configuration -------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_USART2) == RCC_PERIPHCLK_USART2)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_USART2CLKSOURCE(PeriphClkInit->Usart2ClockSelection));
+//
+//    /* Configure the USART2 clock source */
+//    __HAL_RCC_USART2_CONFIG(PeriphClkInit->Usart2ClockSelection);
+//  }
+//#endif /* RCC_CCIPR_USART2SEL */
 
 #if defined(RCC_CCIPR_USART3SEL)
   /*-------------------------- USART3 clock source configuration -------------------*/
@@ -241,199 +241,199 @@ HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClk
   }
 #endif /* RCC_CCIPR_USART3SEL */
 
-#if defined(LPUART1)
-  /*-------------------------- LPUART1 clock source configuration ------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_LPUART1) == RCC_PERIPHCLK_LPUART1)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_LPUART1CLKSOURCE(PeriphClkInit->Lpuart1ClockSelection));
-
-    /* Configure the LPUART1 clock source */
-    __HAL_RCC_LPUART1_CONFIG(PeriphClkInit->Lpuart1ClockSelection);
-  }
-#endif /* LPUART1 */
-
-#if defined(LPUART2)
-  /*-------------------------- LPUART2 clock source configuration ------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_LPUART2) == RCC_PERIPHCLK_LPUART2)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_LPUART2CLKSOURCE(PeriphClkInit->Lpuart2ClockSelection));
-
-    /* Configure the LPUART clock source */
-    __HAL_RCC_LPUART2_CONFIG(PeriphClkInit->Lpuart2ClockSelection);
-  }
-#endif /* LPUART2 */
-
-#if defined(RCC_CCIPR_LPTIM1SEL)
-  /*-------------------------- LPTIM1 clock source configuration -------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_LPTIM1) == (RCC_PERIPHCLK_LPTIM1))
-  {
-    assert_param(IS_RCC_LPTIM1CLKSOURCE(PeriphClkInit->Lptim1ClockSelection));
-    __HAL_RCC_LPTIM1_CONFIG(PeriphClkInit->Lptim1ClockSelection);
-  }
-#endif /* RCC_CCIPR_LPTIM1SEL */
-
-#if defined(RCC_CCIPR_LPTIM2SEL)
-  /*-------------------------- LPTIM2 clock source configuration -------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_LPTIM2) == (RCC_PERIPHCLK_LPTIM2))
-  {
-    assert_param(IS_RCC_LPTIM2CLKSOURCE(PeriphClkInit->Lptim2ClockSelection));
-    __HAL_RCC_LPTIM2_CONFIG(PeriphClkInit->Lptim2ClockSelection);
-  }
-#endif /* RCC_CCIPR_LPTIM2SEL */
-
-  /*-------------------------- I2C1 clock source configuration ---------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2C1) == RCC_PERIPHCLK_I2C1)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_I2C1CLKSOURCE(PeriphClkInit->I2c1ClockSelection));
-
-    /* Configure the I2C1 clock source */
-    __HAL_RCC_I2C1_CONFIG(PeriphClkInit->I2c1ClockSelection);
-  }
-
-#if defined(RCC_CCIPR_I2C2SEL)
-  /*-------------------------- I2C2 clock source configuration ---------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2C2) == RCC_PERIPHCLK_I2C2)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_I2C2CLKSOURCE(PeriphClkInit->I2c2ClockSelection));
-
-    /* Configure the I2C2 clock source */
-    __HAL_RCC_I2C2_CONFIG(PeriphClkInit->I2c2ClockSelection);
-  }
-#endif /* (RCC_CCIPR_I2C2SEL */
-
-#if defined(RNG)
-  /*-------------------------- RNG clock source configuration ----------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_RNG) == (RCC_PERIPHCLK_RNG))
-  {
-    assert_param(IS_RCC_RNGCLKSOURCE(PeriphClkInit->RngClockSelection));
-    __HAL_RCC_RNG_CONFIG(PeriphClkInit->RngClockSelection);
-
-    if (PeriphClkInit->RngClockSelection == RCC_RNGCLKSOURCE_PLL)
-    {
-      /* Enable PLLQCLK output */
-      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLQCLK);
-    }
-  }
-#endif /* RNG */
-  /*-------------------------- ADC clock source configuration ----------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_ADC) == RCC_PERIPHCLK_ADC)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_ADCCLKSOURCE(PeriphClkInit->AdcClockSelection));
-
-    /* Configure the ADC interface clock source */
-    __HAL_RCC_ADC_CONFIG(PeriphClkInit->AdcClockSelection);
-
-    if (PeriphClkInit->AdcClockSelection == RCC_ADCCLKSOURCE_PLLADC)
-    {
-      /* Enable PLLPCLK output */
-      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLPCLK);
-    }
-  }
-
-#if defined(CEC)
-  /*-------------------------- CEC clock source configuration ---------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_CEC) == RCC_PERIPHCLK_CEC)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_CECCLKSOURCE(PeriphClkInit->CecClockSelection));
-
-    /* Configure the CEC clock source */
-    __HAL_RCC_CEC_CONFIG(PeriphClkInit->CecClockSelection);
-  }
-#endif /* CEC */
-
-#if defined(RCC_CCIPR_TIM1SEL)
-  /*-------------------------- TIM1 clock source configuration ---------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_TIM1) == RCC_PERIPHCLK_TIM1)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_TIM1CLKSOURCE(PeriphClkInit->Tim1ClockSelection));
-
-    /* Configure the TIM1 clock source */
-    __HAL_RCC_TIM1_CONFIG(PeriphClkInit->Tim1ClockSelection);
-
-    if (PeriphClkInit->Tim1ClockSelection == RCC_TIM1CLKSOURCE_PLL)
-    {
-      /* Enable PLLQCLK output */
-      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLQCLK);
-    }
-  }
-#endif /* RCC_CCIPR_TIM1SEL */
-
-#if defined(RCC_CCIPR_TIM15SEL)
-  /*-------------------------- TIM15 clock source configuration ---------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_TIM15) == RCC_PERIPHCLK_TIM15)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_TIM15CLKSOURCE(PeriphClkInit->Tim15ClockSelection));
-
-    /* Configure the TIM15 clock source */
-    __HAL_RCC_TIM15_CONFIG(PeriphClkInit->Tim15ClockSelection);
-
-    if (PeriphClkInit->Tim15ClockSelection == RCC_TIM15CLKSOURCE_PLL)
-    {
-      /* Enable PLLQCLK output */
-      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLQCLK);
-    }
-  }
-#endif /* RCC_CCIPR_TIM15SEL */
-
-  /*-------------------------- I2S1 clock source configuration ---------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2S1) == RCC_PERIPHCLK_I2S1)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_I2S1CLKSOURCE(PeriphClkInit->I2s1ClockSelection));
-
-    /* Configure the I2S1 clock source */
-    __HAL_RCC_I2S1_CONFIG(PeriphClkInit->I2s1ClockSelection);
-
-    if (PeriphClkInit->I2s1ClockSelection == RCC_I2S1CLKSOURCE_PLL)
-    {
-      /* Enable PLLPCLK output */
-      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLPCLK);
-    }
-  }
-
-#if defined(RCC_CCIPR2_I2S2SEL)
-  /*-------------------------- I2S2 clock source configuration ---------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2S2) == RCC_PERIPHCLK_I2S2)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_I2S2CLKSOURCE(PeriphClkInit->I2s2ClockSelection));
-
-    /* Configure the I2S2 clock source */
-    __HAL_RCC_I2S2_CONFIG(PeriphClkInit->I2s2ClockSelection);
-
-    if (PeriphClkInit->I2s2ClockSelection == RCC_I2S2CLKSOURCE_PLL)
-    {
-      /* Enable PLLPCLK output */
-      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLPCLK);
-    }
-  }
-#endif /* RCC_CCIPR2_I2S2SEL */
-
-#if defined(STM32G0C1xx) || defined(STM32G0B1xx)  || defined(STM32G0B0xx)
-  /*-------------------------- USB clock source configuration ---------------------*/
-  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_USB) == RCC_PERIPHCLK_USB)
-  {
-    /* Check the parameters */
-    assert_param(IS_RCC_USBCLKSOURCE(PeriphClkInit->UsbClockSelection));
-
-    /* Configure the USB clock source */
-    __HAL_RCC_USB_CONFIG(PeriphClkInit->UsbClockSelection);
-
-    if (PeriphClkInit->UsbClockSelection == RCC_USBCLKSOURCE_PLL)
-    {
-      /* Enable PLLQCLK output */
-      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLQCLK);
-    }
-  }
-#endif /* STM32G0C1xx || STM32G0B1xx || STM32G0B0xx */
+//#if defined(LPUART1)
+//  /*-------------------------- LPUART1 clock source configuration ------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_LPUART1) == RCC_PERIPHCLK_LPUART1)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_LPUART1CLKSOURCE(PeriphClkInit->Lpuart1ClockSelection));
+//
+//    /* Configure the LPUART1 clock source */
+//    __HAL_RCC_LPUART1_CONFIG(PeriphClkInit->Lpuart1ClockSelection);
+//  }
+//#endif /* LPUART1 */
+//
+//#if defined(LPUART2)
+//  /*-------------------------- LPUART2 clock source configuration ------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_LPUART2) == RCC_PERIPHCLK_LPUART2)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_LPUART2CLKSOURCE(PeriphClkInit->Lpuart2ClockSelection));
+//
+//    /* Configure the LPUART clock source */
+//    __HAL_RCC_LPUART2_CONFIG(PeriphClkInit->Lpuart2ClockSelection);
+//  }
+//#endif /* LPUART2 */
+//
+//#if defined(RCC_CCIPR_LPTIM1SEL)
+//  /*-------------------------- LPTIM1 clock source configuration -------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_LPTIM1) == (RCC_PERIPHCLK_LPTIM1))
+//  {
+//    assert_param(IS_RCC_LPTIM1CLKSOURCE(PeriphClkInit->Lptim1ClockSelection));
+//    __HAL_RCC_LPTIM1_CONFIG(PeriphClkInit->Lptim1ClockSelection);
+//  }
+//#endif /* RCC_CCIPR_LPTIM1SEL */
+//
+//#if defined(RCC_CCIPR_LPTIM2SEL)
+//  /*-------------------------- LPTIM2 clock source configuration -------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_LPTIM2) == (RCC_PERIPHCLK_LPTIM2))
+//  {
+//    assert_param(IS_RCC_LPTIM2CLKSOURCE(PeriphClkInit->Lptim2ClockSelection));
+//    __HAL_RCC_LPTIM2_CONFIG(PeriphClkInit->Lptim2ClockSelection);
+//  }
+//#endif /* RCC_CCIPR_LPTIM2SEL */
+//
+//  /*-------------------------- I2C1 clock source configuration ---------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2C1) == RCC_PERIPHCLK_I2C1)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_I2C1CLKSOURCE(PeriphClkInit->I2c1ClockSelection));
+//
+//    /* Configure the I2C1 clock source */
+//    __HAL_RCC_I2C1_CONFIG(PeriphClkInit->I2c1ClockSelection);
+//  }
+//
+//#if defined(RCC_CCIPR_I2C2SEL)
+//  /*-------------------------- I2C2 clock source configuration ---------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2C2) == RCC_PERIPHCLK_I2C2)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_I2C2CLKSOURCE(PeriphClkInit->I2c2ClockSelection));
+//
+//    /* Configure the I2C2 clock source */
+//    __HAL_RCC_I2C2_CONFIG(PeriphClkInit->I2c2ClockSelection);
+//  }
+//#endif /* (RCC_CCIPR_I2C2SEL */
+//
+//#if defined(RNG)
+//  /*-------------------------- RNG clock source configuration ----------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_RNG) == (RCC_PERIPHCLK_RNG))
+//  {
+//    assert_param(IS_RCC_RNGCLKSOURCE(PeriphClkInit->RngClockSelection));
+//    __HAL_RCC_RNG_CONFIG(PeriphClkInit->RngClockSelection);
+//
+//    if (PeriphClkInit->RngClockSelection == RCC_RNGCLKSOURCE_PLL)
+//    {
+//      /* Enable PLLQCLK output */
+//      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLQCLK);
+//    }
+//  }
+//#endif /* RNG */
+//  /*-------------------------- ADC clock source configuration ----------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_ADC) == RCC_PERIPHCLK_ADC)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_ADCCLKSOURCE(PeriphClkInit->AdcClockSelection));
+//
+//    /* Configure the ADC interface clock source */
+//    __HAL_RCC_ADC_CONFIG(PeriphClkInit->AdcClockSelection);
+//
+//    if (PeriphClkInit->AdcClockSelection == RCC_ADCCLKSOURCE_PLLADC)
+//    {
+//      /* Enable PLLPCLK output */
+//      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLPCLK);
+//    }
+//  }
+//
+//#if defined(CEC)
+//  /*-------------------------- CEC clock source configuration ---------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_CEC) == RCC_PERIPHCLK_CEC)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_CECCLKSOURCE(PeriphClkInit->CecClockSelection));
+//
+//    /* Configure the CEC clock source */
+//    __HAL_RCC_CEC_CONFIG(PeriphClkInit->CecClockSelection);
+//  }
+//#endif /* CEC */
+//
+//#if defined(RCC_CCIPR_TIM1SEL)
+//  /*-------------------------- TIM1 clock source configuration ---------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_TIM1) == RCC_PERIPHCLK_TIM1)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_TIM1CLKSOURCE(PeriphClkInit->Tim1ClockSelection));
+//
+//    /* Configure the TIM1 clock source */
+//    __HAL_RCC_TIM1_CONFIG(PeriphClkInit->Tim1ClockSelection);
+//
+//    if (PeriphClkInit->Tim1ClockSelection == RCC_TIM1CLKSOURCE_PLL)
+//    {
+//      /* Enable PLLQCLK output */
+//      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLQCLK);
+//    }
+//  }
+//#endif /* RCC_CCIPR_TIM1SEL */
+//
+//#if defined(RCC_CCIPR_TIM15SEL)
+//  /*-------------------------- TIM15 clock source configuration ---------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_TIM15) == RCC_PERIPHCLK_TIM15)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_TIM15CLKSOURCE(PeriphClkInit->Tim15ClockSelection));
+//
+//    /* Configure the TIM15 clock source */
+//    __HAL_RCC_TIM15_CONFIG(PeriphClkInit->Tim15ClockSelection);
+//
+//    if (PeriphClkInit->Tim15ClockSelection == RCC_TIM15CLKSOURCE_PLL)
+//    {
+//      /* Enable PLLQCLK output */
+//      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLQCLK);
+//    }
+//  }
+//#endif /* RCC_CCIPR_TIM15SEL */
+//
+//  /*-------------------------- I2S1 clock source configuration ---------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2S1) == RCC_PERIPHCLK_I2S1)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_I2S1CLKSOURCE(PeriphClkInit->I2s1ClockSelection));
+//
+//    /* Configure the I2S1 clock source */
+//    __HAL_RCC_I2S1_CONFIG(PeriphClkInit->I2s1ClockSelection);
+//
+//    if (PeriphClkInit->I2s1ClockSelection == RCC_I2S1CLKSOURCE_PLL)
+//    {
+//      /* Enable PLLPCLK output */
+//      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLPCLK);
+//    }
+//  }
+//
+//#if defined(RCC_CCIPR2_I2S2SEL)
+//  /*-------------------------- I2S2 clock source configuration ---------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_I2S2) == RCC_PERIPHCLK_I2S2)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_I2S2CLKSOURCE(PeriphClkInit->I2s2ClockSelection));
+//
+//    /* Configure the I2S2 clock source */
+//    __HAL_RCC_I2S2_CONFIG(PeriphClkInit->I2s2ClockSelection);
+//
+//    if (PeriphClkInit->I2s2ClockSelection == RCC_I2S2CLKSOURCE_PLL)
+//    {
+//      /* Enable PLLPCLK output */
+//      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLPCLK);
+//    }
+//  }
+//#endif /* RCC_CCIPR2_I2S2SEL */
+//
+//#if defined(STM32G0C1xx) || defined(STM32G0B1xx)  || defined(STM32G0B0xx)
+//  /*-------------------------- USB clock source configuration ---------------------*/
+//  if (((PeriphClkInit->PeriphClockSelection) & RCC_PERIPHCLK_USB) == RCC_PERIPHCLK_USB)
+//  {
+//    /* Check the parameters */
+//    assert_param(IS_RCC_USBCLKSOURCE(PeriphClkInit->UsbClockSelection));
+//
+//    /* Configure the USB clock source */
+//    __HAL_RCC_USB_CONFIG(PeriphClkInit->UsbClockSelection);
+//
+//    if (PeriphClkInit->UsbClockSelection == RCC_USBCLKSOURCE_PLL)
+//    {
+//      /* Enable PLLQCLK output */
+//      __HAL_RCC_PLLCLKOUT_ENABLE(RCC_PLLQCLK);
+//    }
+//  }
+//#endif /* STM32G0C1xx || STM32G0B1xx || STM32G0B0xx */
 
 #if defined(FDCAN1) || defined(FDCAN2)
   /*-------------------------- FDCAN clock source configuration ---------------------*/

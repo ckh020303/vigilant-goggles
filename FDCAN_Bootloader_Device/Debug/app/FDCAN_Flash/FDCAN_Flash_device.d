@@ -1,6 +1,6 @@
 app/FDCAN_Flash/FDCAN_Flash_device.o: \
  ../app/FDCAN_Flash/FDCAN_Flash_device.c \
- D:/STM32CubeIDE/workspace_1.14.0/FDCAN_Bootloader_Device/app/FDCAN_Flash/FDCAN_Flash_device.h \
+ C:/Users/ftftf/Desktop/vigilant-goggles-FDCAN_Bootloader/FDCAN_Bootloader_Device/app/FDCAN_Flash/FDCAN_Flash_device.h \
  ../Core/Inc/gpio.h ../Core/Inc/main.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h \
  ../Core/Inc/stm32g0xx_hal_conf.h \
@@ -33,8 +33,8 @@ app/FDCAN_Flash/FDCAN_Flash_device.o: \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h \
  ../Core/Inc/usart.h ../Core/Inc/fdcan.h ../Core/Inc/main.h \
- D:/STM32CubeIDE/workspace_1.14.0/FDCAN_Bootloader_Device/app/Bsp/Bsp.h
-D:/STM32CubeIDE/workspace_1.14.0/FDCAN_Bootloader_Device/app/FDCAN_Flash/FDCAN_Flash_device.h:
+ C:/Users/ftftf/Desktop/vigilant-goggles-FDCAN_Bootloader/FDCAN_Bootloader_Device/app/Bsp/Bsp.h
+C:/Users/ftftf/Desktop/vigilant-goggles-FDCAN_Bootloader/FDCAN_Bootloader_Device/app/FDCAN_Flash/FDCAN_Flash_device.h:
 ../Core/Inc/gpio.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
@@ -70,4 +70,4 @@ D:/STM32CubeIDE/workspace_1.14.0/FDCAN_Bootloader_Device/app/FDCAN_Flash/FDCAN_F
 ../Core/Inc/usart.h:
 ../Core/Inc/fdcan.h:
 ../Core/Inc/main.h:
-D:/STM32CubeIDE/workspace_1.14.0/FDCAN_Bootloader_Device/app/Bsp/Bsp.h:
+C:/Users/ftftf/Desktop/vigilant-goggles-FDCAN_Bootloader/FDCAN_Bootloader_Device/app/Bsp/Bsp.h:

@@ -68,8 +68,8 @@ all: main-build
 main-build: FDCAN_Bootloader_Device.elf secondary-outputs
 
 # Tool invocations
-FDCAN_Bootloader_Device.elf FDCAN_Bootloader_Device.map: $(OBJS) $(USER_OBJS) D:\STM32CubeIDE\workspace_1.14.0\FDCAN_Bootloader_Device\STM32G0B1CBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "FDCAN_Bootloader_Device.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"D:\STM32CubeIDE\workspace_1.14.0\FDCAN_Bootloader_Device\STM32G0B1CBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="FDCAN_Bootloader_Device.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+FDCAN_Bootloader_Device.elf FDCAN_Bootloader_Device.map: $(OBJS) $(USER_OBJS) C:\Users\ftftf\Desktop\vigilant-goggles-FDCAN_Bootloader\FDCAN_Bootloader_Device\STM32G0B1CBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "FDCAN_Bootloader_Device.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\Users\ftftf\Desktop\vigilant-goggles-FDCAN_Bootloader\FDCAN_Bootloader_Device\STM32G0B1CBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="FDCAN_Bootloader_Device.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
