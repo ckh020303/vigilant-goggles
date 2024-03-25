@@ -4,6 +4,7 @@
 uint8_t rx_flag;
 FDCAN_TxHeaderTypeDef TxHeader;
 FDCanRxHeader _Buffer[400];
+FDCanRxHeader header;
 int size = 400;
 int validCount;
 int head,tail;
@@ -83,8 +84,6 @@ void FDCAN_SendByte(uint8_t byte)
 
 	/* Clear the complete flag */
 	(&hfdcan1)->Instance->IR &= FDCAN_IR_TFE;
-
-	HAL_Delay(1);
 }
 
 void FDCAN_SendBytes(uint8_t *Buffer, uint32_t BufferSize)
@@ -100,24 +99,35 @@ void FDCAN_SendBytes(uint8_t *Buffer, uint32_t BufferSize)
 
 	/* Clear the complete flag */
 	(&hfdcan1)->Instance->IR &= FDCAN_IR_TFE;
-
-	HAL_Delay(1);
 }
+
+//uint8_t FDCAN_ReadByte(void)
+//{
+//	FDCanRxHeader header;
+//	int err;
+//
+//	err = read(&header);
+//	if(err){
+//		return header.data[0];
+//	}
+//	else
+//	{
+//		printf("Buffer is Empty\n");
+//		return 0;
+//	}
+//}
 
 uint8_t FDCAN_ReadByte(void)
 {
-	FDCanRxHeader header;
-	int err;
+  uint8_t byte = 0x0;
 
-	err = read(&header);
-	if(err){
-		HAL_Delay(1);
-		return header.data[0];
-	}
-	else
-	{
-		printf("Buffer is Empty\n");
-	}
+  /* check if FIFO 0 receive at least one message */
+  while (HAL_FDCAN_GetRxFifoFillLevel(&hfdcan1, FDCAN_RX_FIFO0) < 1);
+
+  /* Retrieve Rx messages from RX FIFO0 */
+  HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &(header.RxHeader), &byte);
+
+  return byte;
 }
 
 void FDCAN_ReadBytes(uint8_t *Buffer, uint32_t BufferSize)
@@ -128,26 +138,24 @@ void FDCAN_ReadBytes(uint8_t *Buffer, uint32_t BufferSize)
 	err = read(&header);
 	if(err){
 		memcpy(Buffer,header.data,sizeof(header.data));
-		HAL_Delay(1);
 	}
 	else
 	{
-		printf("Buffer is Empty\n");
+		printf("Buffers is Empty\n");
 	}
 }
 
-void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)			//接收中断回调函数重写
-{
-	FDCanRxHeader header;
-	if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
-	{
-//		rx_flag = 1;
-		/* Retrieve Rx messages from RX FIFO0 */
-		HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &(header.RxHeader), header.data);
-		/* write buffer */
-		write(&header);
-	}
-}
+//void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)			//接收中断回调函数重写
+//{
+//	if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
+//	{
+////		rx_flag = 1;
+//		/* Retrieve Rx messages from RX FIFO0 */
+//		HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &(header.RxHeader), header.data);
+//		/* write buffer */
+//		write(&header);
+//	}
+//}
 
 int getNextPos(int cur)
 {
@@ -190,7 +198,7 @@ void FDCAN_GetCommand(void)
 	TxHeader.Identifier = GET;
 
 	FDCAN_SendByte(0x00);
-	HAL_Delay(2);
+	HAL_Delay(3);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 	{
 		num = FDCAN_ReadByte();
@@ -225,7 +233,7 @@ void FDCAN_GetID(void)
 	TxHeader.Identifier = GETID;
 
 	FDCAN_SendByte(0x00);
-	HAL_Delay(2);
+	HAL_Delay(3);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 	{
 		FDCAN_ReadBytes(data,FDCAN_DLC_BYTES_2);
@@ -252,7 +260,7 @@ void FDCAN_ReadMemory(void)
 	TxHeader.Identifier = READ;
 
 	FDCAN_SendBytes(txdata,FDCAN_DLC_BYTES_5);
-	HAL_Delay(2);
+	HAL_Delay(3);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 	{
 //		printf("ReadMemoryData:\n");
@@ -291,7 +299,6 @@ void FDCAN_WriteMemory(uint8_t *address, uint8_t *data)
 
 	FDCAN_SendBytes(address,FDCAN_DLC_BYTES_5);
 	FDCAN_TxConfig();
-	HAL_Delay(2);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 	{
 		for (int i=0;i<4;i++)
@@ -307,7 +314,6 @@ void FDCAN_WriteMemory(uint8_t *address, uint8_t *data)
 			HAL_Delay(1);
 		}
 
-		HAL_Delay(7);
 		if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 		{
 			printf("WriteMemory Success!\n");
@@ -329,12 +335,9 @@ void FDCAN_EraseMemory(uint8_t *txdata, uint8_t *data)
 
 	FDCAN_SendBytes(txdata,FDCAN_DLC_BYTES_2);
 	FDCAN_TxConfig();
-	HAL_Delay(2);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 	{
 		FDCAN_SendBytes(data,FDCAN_DLC_BYTES_64);
-
-		HAL_Delay(100);
 		if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 		{
 			printf("EraseMemory Success!\n");
@@ -356,10 +359,8 @@ void FDCAN_Go(void)
 	TxHeader.Identifier = GO;
 
 	FDCAN_SendBytes(txdata,FDCAN_DLC_BYTES_4);
-	HAL_Delay(10);
 	if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 	{
-		HAL_Delay(10);
 		if ((FDCAN_ReadByte() & ACK_BYTE) == ACK_BYTE)
 		{
 			printf("Go Success!\n");

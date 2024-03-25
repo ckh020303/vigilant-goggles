@@ -116,6 +116,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   printf("host\n");
   FDCAN_Enable();
+  HAL_Delay(100);
 //  FDCAN_GetCommand();
 //  FDCAN_GetID();
 //  FDCAN_ReadMemory();
@@ -131,8 +132,8 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-    FDCAN_GetCommand();
-    FDCAN_GetID();
+//    FDCAN_GetCommand();
+//    FDCAN_GetID();
 
     count=0;
     txdata_e[1] = 20;
@@ -142,7 +143,6 @@ int main(void)
     }
 
     FDCAN_EraseMemory(txdata_e,data_e);
-    HAL_Delay(350);
 
     txdata_e[1] = 20;
     for(i=0;i<txdata_e[1];i++)
@@ -151,7 +151,6 @@ int main(void)
 	}
 
 	FDCAN_EraseMemory(txdata_e,data_e);
-	HAL_Delay(350);
 
 	txdata_e[1] = 18;
 	for(i=0;i<txdata_e[1];i++)
@@ -160,7 +159,6 @@ int main(void)
 	}
 
 	FDCAN_EraseMemory(txdata_e,data_e);
-	HAL_Delay(350);
 
     address = 0x08003000;
     for(int j=0;j<236;j++)	//
@@ -181,7 +179,6 @@ int main(void)
 			txdata_w[1]++;
 		}
     	txdata_w[2]++;
-    	HAL_Delay(20);
     }
 
     HAL_Delay(1000);

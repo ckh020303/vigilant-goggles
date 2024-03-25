@@ -95,8 +95,6 @@ void FDCAN_SendByte(uint8_t byte)
 
 	/* Clear the complete flag */
 	(&hfdcan1)->Instance->IR &= FDCAN_IR_TFE;
-
-	HAL_Delay(1);
 }
 
 void FDCAN_SendBytes(uint8_t *Buffer, uint32_t BufferSize)
@@ -112,8 +110,6 @@ void FDCAN_SendBytes(uint8_t *Buffer, uint32_t BufferSize)
 
 	/* Clear the complete flag */
 	(&hfdcan1)->Instance->IR &= FDCAN_IR_TFE;
-
-	HAL_Delay(1);
 }
 
 uint8_t FDCAN_ReadByte(void)
@@ -123,7 +119,6 @@ uint8_t FDCAN_ReadByte(void)
 
 	err = read(&header);
 	if(err){
-		HAL_Delay(1);
 		return header.data[0];
 	}
 	else
@@ -140,7 +135,6 @@ void FDCAN_ReadBytes(uint8_t *Buffer, uint32_t BufferSize)
 	err = read(&header);
 	if(err){
 		memcpy(Buffer,header.data,sizeof(header.data));
-		HAL_Delay(1);
 	}
 	else
 	{
@@ -346,13 +340,13 @@ void FDCAN_WriteMemory_d(void)
 
 			data_length = 0;
 
-			HAL_Delay(10);
+			HAL_Delay(1);
 			if (count != 0U)
 			{
 				while (data_length != count)
 				{
 					FDCAN_ReadBytes(&data[data_length * 64U], FDCAN_DLC_BYTES_64);
-					HAL_Delay(5);
+					HAL_Delay(3);
 					data_length++;
 				}
 			}
@@ -406,7 +400,7 @@ void FDCAN_EraseMemory_d(void)
 
 		if ((data_a & 0xFFF0U) != 0xFFF0U)
 		{
-			HAL_Delay(10);
+			HAL_Delay(1);
 			FDCAN_ReadBytes(&data[2], 64U);
 			i = 2;
 
